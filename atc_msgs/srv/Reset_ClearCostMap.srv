@@ -1,0 +1,7 @@
+# Incoming parameter of the service.
+bool reset_clear_costmap
+---
+# Response fields
+int8 movement_mode
+int8 agv_state
+string status_message

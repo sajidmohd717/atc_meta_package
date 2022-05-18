@@ -1,0 +1,16 @@
+<library path="libatc_waypoints">
+  <class name="atc_waypoints/Waypoints"
+         type="atc_waypoints::WaypointTool"
+         base_class_type="rviz::Tool">
+    <description>
+      Tool for set waypoints for navigation
+    </description>
+  </class>
+   <class name="atc_waypoints/waypointPanel"
+         type="atc_waypoints::waypointPanel"
+         base_class_type="rviz::Panel">
+    <description>
+      Panel for waypoints
+    </description>
+  </class>
+</library>

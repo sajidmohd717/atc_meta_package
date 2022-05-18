@@ -1,0 +1,7 @@
+# Incoming parameter of the service.
+float64 cmd_heading_deg
+---
+# Response fields
+int8 movement_mode
+int8 agv_state
+string status_message

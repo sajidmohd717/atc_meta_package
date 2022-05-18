@@ -1,0 +1,28 @@
+<launch>
+	<arg name="Frequency"	default="1"/>
+	<arg name="Message"	default="Hi! Default Message"/>
+
+	<param name="Custom_Frequency" value="$(arg Frequency)"> </param>
+	<param name="msg" value="$(arg Message)"> </param>
+	<!--
+	<env name="ROSCONSOLE_CONFIG_FILE"
+       value="$(find beginner_tutorials)/config/custom.conf"/>
+	-->
+	<node 
+	     name="astm"
+	     pkg="atc_state_machine_manager"
+             type="astm"
+             output="screen"
+	     launch-prefix="gnome-terminal --command"
+        />
+		
+	<node
+             name="rviz_comms"
+             pkg="atc_state_machine_manager"
+             type="rviz_comms"
+             output="screen"
+	     launch-prefix="gnome-terminal --command"
+	/>
+	
+	
+</launch>

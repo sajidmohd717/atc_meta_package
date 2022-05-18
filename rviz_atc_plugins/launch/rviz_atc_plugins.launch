@@ -1,0 +1,31 @@
+<launch>
+  <arg name="model" default="caato"/>
+  <arg name="set_map_frame"  default="map"/>
+  
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(find decada_sim_assets)/maps/mbc/lvl10/mbc.yaml">
+    <param name="frame_id" value="$(arg set_map_frame)"/>
+  </node>
+
+  <!-- launch the navigation stacks of 3 caatos-->
+  <arg name="caato_0_prefix" value="caato_0"/>
+  <group ns="$(arg caato_0_prefix)">
+    <include file="$(find caato_navigation)/launch/single_caato_ff.launch">
+      <arg name="model" value="$(arg model)"/>
+      <arg name="set_base_frame" value="$(arg caato_0_prefix)/base_link"/>
+      <arg name="set_odom_frame" value="$(arg caato_0_prefix)/odom"/>
+      <arg name="set_scan_frame" value="$(arg caato_0_prefix)/base_scan"/>
+      <arg name="set_map_frame" value="$(arg set_map_frame)"/>
+      <arg name="open_rviz" value="false"/>
+      <arg name="initial_pose_x" default="22.0"/>
+      <arg name="initial_pose_y" default="-17.0"/>
+      <arg name="initial_pose_a" default="1.57"/>
+    </include>
+  </group>
+
+
+  <!-- launch the overall visualization on rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" required="true"
+        args="-d $(find rviz_atc_plugins)/rviz/atc_rviz.rviz" output="screen"/>
+  
+</launch>

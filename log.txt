@@ -1,0 +1,295 @@
+commit c7391a624748e54d5d64ebcc0166624005b0c2f6
+Author: siotrobotics <sang035@e.ntu.edu.sg>
+Date:   Tue May 17 14:39:41 2022 +0800
+
+    unstable update for Tim
+
+commit 3baaace89bbaf7eb44824dfb8061b7c8694ad4cd
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Fri Aug 13 11:32:51 2021 +0800
+
+    Updated tf_listener codes
+    
+    Additional code to isolate tf "lookup into the past" issue
+
+commit 1505b13e015e67e81112d4257e0e4b255e5c764a
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Wed Aug 11 13:10:21 2021 +0800
+
+    Updated atc_meta_package
+    
+    Integrated Xnergy commands (start/stop charge), readout telemetry
+
+commit a965e8548a099e0a3cb43733c79e2f56aeb086fa
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Tue Aug 10 15:47:20 2021 +0800
+
+    Updated atc_stm codes
+    
+    Solved bug, where trolley didnt clear previous datasets while crossing
+    from trolley front to trolley back
+    
+    Also reduced the staging goal distance (2m away) to 1.2m; faster
+
+commit 21ce1cfa9b151ea77734ab1823219e4049678287
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Thu Aug 5 10:57:01 2021 +0800
+
+    Updated atc_stm
+    
+    1) Front & back realsense camera fusion
+    2) Logic to handle trolley with front and back apriltags
+
+commit 80390ef275a67b084b4194a606af3cbd5605fe72
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Thu Jul 29 11:22:24 2021 +0800
+
+    Updated to STM and rviz panel
+    
+    - Return to home
+    - Return to Trolley Dropoff
+    - Charge AGV
+    - Reset states & clear cost map
+    - Tidy up staging goal behavior
+
+commit e0d4bde2fc319d6f5099e3b4f39edcffa800511b
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Tue Jul 27 12:05:41 2021 +0800
+
+    Updated drive widget
+    
+    Limit drive widget outputs
+
+commit ae0e94cb53100a77530a144a7938385a9ca8f955
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Wed May 19 12:18:58 2021 +0800
+
+    Shortcut commands
+    
+    Shortcut commands
+
+commit cc5418038e65e9f204d9409873f334466904d073
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Mon May 10 15:39:06 2021 +0800
+
+    Updated latch command to string
+    
+    Updated latch command to string
+
+commit a1709d7686bc1f81300c92cbd5dd18b5588015e4
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Mon May 10 15:16:28 2021 +0800
+
+    Added latch button
+    
+    Added latch button
+
+commit 50cf02ab01f24caa2011e35fb2b43acd3c41c322
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Thu May 6 14:29:25 2021 +0800
+
+    Updated panel to amcl_pose
+    
+    Updated panel to amcl_pose
+
+commit 426604cf28db7850ea1efac146701ca31ffbb66e
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Thu May 6 12:27:32 2021 +0800
+
+    Updated heading to amcl_pose heading
+    
+    Updated heading to amcl_pose heading
+
+commit 00f5bffd226339641ee50632202ac513782b5404
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Tue May 4 15:15:50 2021 +0800
+
+    Updated stable code
+    
+    Updated stable code
+
+commit 14db8839e502429ebac4becb5acb899466a8cd55
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Mon May 3 22:07:40 2021 +0800
+
+    Working stable copy
+    
+    TODO:
+    Stop button interrupt
+
+commit c626123b75019e26ec6c86dcf48eb8548764378c
+Merge: 5beb614 fe1610e
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Mon May 3 09:00:32 2021 +0800
+
+    Merge branch 'master' of https://git.siotgov.tech/decada_robotics/atc_meta_package
+
+commit 5beb61425b1f6298fd752107cff6cf84d22383aa
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Mon May 3 08:59:29 2021 +0800
+
+    Update... some outstanding bugs (TODO)
+    
+    1) Stop & waypoints non interruptible in main thread
+    2) Apriltag logic still buggy.
+    3) More thorough testing to prevent E-Stop (aka return false) situations
+    4) Problems with extrapolation to future and pass. Rem to set
+    use_sim_tim = true in lauch files for apriltag_ros
+
+commit fe1610e83c4add8a8d6600a568dcf82f9f23fbde
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Wed Apr 28 17:08:34 2021 +0800
+
+    Update
+    
+    Update
+
+commit de6f20348409f1d42bfdb3bec8005d4cd6791f8e
+Merge: bacb3f6 4daaed9
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Wed Apr 28 17:08:21 2021 +0800
+
+    Merge branch 'master' of https://git.siotgov.tech/decada_robotics/atc_meta_package
+
+commit bacb3f6eb2eb7465e8b8e5b68f9219a072b9eaa9
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Wed Apr 28 17:07:51 2021 +0800
+
+    Update (cleaned up)
+    
+    Update (cleaned up)
+
+commit 4daaed915d9c1ffd6921962f5f6c5a36e68c1a58
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Mon Apr 26 13:21:56 2021 +0800
+
+    Updates
+
+commit a5a7b71958fecbc9edf57909bc38a17fb5fe22ea
+Merge: d931d6e b7b13de
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Sun Apr 25 22:39:04 2021 +0800
+
+    Merge branch 'master' of https://git.siotgov.tech/decada_robotics/atc_meta_package
+
+commit b7b13de11c14a6f24381e253ac04b51706790ccd
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Sun Apr 25 22:38:23 2021 +0800
+
+    cmake update
+    
+    cmake update
+
+commit d931d6e499af0326af68cb7a8a0ebae50a0cab60
+Merge: 0907241 9b6e64f
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Sun Apr 25 22:36:03 2021 +0800
+
+    Merge branch 'master' of https://git.siotgov.tech/decada_robotics/atc_meta_package
+
+commit 9b6e64f821178fe8b661bc2295884fe8d3ef8e42
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Sun Apr 25 21:37:13 2021 +0800
+
+    Update atc_detector launch files
+    
+    Update atc_detector launch files
+
+commit 09072412ef3ba3765a1c3a058a76a40c5d11c6e6
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Thu Apr 22 15:18:35 2021 +0800
+
+    Updated panel and behaviors
+    
+    rviz_atc_plugins added buttons for control of stop and trolley detected
+    states. Stop call is non blocking
+
+commit fe9f46ac4c346c8737273545bd0d17a8f720e440
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Tue Apr 20 22:39:26 2021 +0800
+
+    Added pushbutton to activate trolley detector on demand
+    
+    Added pushbutton to activate trolley detector on demand
+
+commit b0ed7b932ea9d49d115778007f322f02f81eed8d
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Mon Apr 19 16:25:35 2021 +0800
+
+    Major commit
+    
+    Major commit
+    - Waypoint logic added to atc_stm (no need launch waypoint_server)
+    - atc_stm logic refactored to reflect the various logic packages
+
+commit ffd682f985a9f07bbbd5d2e601e74e77fbea0918
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Wed Apr 7 23:24:51 2021 +0800
+
+    1st working dock codes
+    
+    1st working dock codes
+
+commit d5cc936f0a9ca761b98203ae7039a41dab68d904
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Mon Apr 5 11:19:36 2021 +0800
+
+    Updates
+    
+    Updates
+
+commit b06d38d7dcd4052635dd515c628c984ac47c66dd
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Thu Mar 25 15:55:34 2021 +0800
+
+    Working waypoint package
+    
+    Working waypoint package
+
+commit d14a73d3326528bc922f0904f05843202bd6c1fb
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Thu Mar 25 11:50:25 2021 +0800
+
+    Added atc_waypoints
+    
+    Added atc_waypoints
+
+commit 6eb6493310a7617815b53f249d1b583fd6a8974a
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Tue Mar 23 08:12:38 2021 +0800
+
+    Updates
+    
+    Updates
+
+commit 372e49b4111cee8ebdb011125100f8582ba60217
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Sun Mar 21 23:32:54 2021 +0800
+
+    Updates
+    
+    Updates
+
+commit 15b4034004d8e25cab429d650d844425c28b5145
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Wed Mar 17 07:54:21 2021 +0800
+
+    Update
+    
+    Update
+
+commit 4da3da66bb2b15c1ae84200e996d19e6307bcca7
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Tue Mar 16 16:27:16 2021 +0800
+
+    Added rviz_atc_plugins
+    
+    Added rviz_atc_plugins
+
+commit 240e4489651abd1fbe30050ea130ab15f7a497a5
+Author: timityjoe <timityjoe@hotmail.com>
+Date:   Tue Mar 16 16:15:00 2021 +0800
+
+    1st commit
+    
+    1st commit

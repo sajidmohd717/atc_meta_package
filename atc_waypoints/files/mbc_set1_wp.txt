@@ -1,0 +1,216 @@
+name: wp1
+pose: 
+  position: 
+    x: 27.6781
+    y: -15.9097
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: -0.0248977
+    w: 0.99969
+---
+name: wp1_1
+pose: 
+  position: 
+    x: 18.8552
+    y: -15.3938
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.981802
+    w: 0.189907
+---
+name: wp1_2
+pose: 
+  position: 
+    x: 8.83224
+    y: -24.9076
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.999555
+    w: 0.029823
+---
+name: wp2
+pose: 
+  position: 
+    x: 29.9276
+    y: -18.223
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: -0.713625
+    w: 0.700528
+---
+name: wp2_1
+pose: 
+  position: 
+    x: 15.2608
+    y: -15.4642
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.942436
+    w: -0.334387
+---
+name: wp2_2
+pose: 
+  position: 
+    x: 3.46067
+    y: -24.4119
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.945141
+    w: 0.326661
+---
+name: wp3
+pose: 
+  position: 
+    x: 28.9752
+    y: -21.9046
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.999718
+    w: 0.023736
+---
+name: wp3_1
+pose: 
+  position: 
+    x: 14.1084
+    y: -17.5982
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: -0.569157
+    w: 0.822229
+---
+name: wp3_2
+pose: 
+  position: 
+    x: 2.20545
+    y: -20.1466
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.464145
+    w: 0.885759
+---
+name: wp4
+pose: 
+  position: 
+    x: 24.9638
+    y: -21.4237
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.999066
+    w: 0.0432154
+---
+name: wp4_1
+pose: 
+  position: 
+    x: 15.5258
+    y: -19.3066
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: -0.180492
+    w: 0.983577
+---
+name: wp4_2
+pose: 
+  position: 
+    x: 6.86081
+    y: -20.2715
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: -0.150326
+    w: 0.988636
+---
+name: wp5
+pose: 
+  position: 
+    x: 22.1392
+    y: -20.4401
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.898367
+    w: 0.439247
+---
+name: wp5_1
+pose: 
+  position: 
+    x: 18.3477
+    y: -19.6542
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.0420034
+    w: 0.999117
+---
+name: wp6
+pose: 
+  position: 
+    x: 21.2694
+    y: -17.4298
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.533614
+    w: 0.845728
+---
+name: wp6_1
+pose: 
+  position: 
+    x: 20.6388
+    y: -18.7044
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.672561
+    w: 0.740042
+---
+name: wp_back
+pose: 
+  position: 
+    x: 9.12829
+    y: -20.628
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.743465
+    w: 0.668775
+---
+name: wp_front
+pose: 
+  position: 
+    x: 6.29776
+    y: -22.8764
+    z: 0
+  orientation: 
+    x: 0
+    y: 0
+    z: 0.149764
+    w: 0.988722
+---

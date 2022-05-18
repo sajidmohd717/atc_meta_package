@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="atc_waypoints" type="waypoints_server" name="waypoints_server" output="screen">
+  	<!-- remap from="move_base_simple/goal" to="tb3_0/move_base_simple/goal" /  -->
+  </node>
+        
+</launch>

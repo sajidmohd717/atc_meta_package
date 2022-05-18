@@ -1,0 +1,25 @@
+name: path0
+wp_list: 
+   - wp1
+   - wp2
+   - wp3
+   - wp4
+   - wp5
+   - wp6
+---
+name: path1
+wp_list: 
+   - wp1_1
+   - wp2_1
+   - wp3_1
+   - wp4_1
+   - wp5_1
+   - wp6_1
+---
+name: path_2
+wp_list: 
+   - wp1_2
+   - wp2_2
+   - wp3_2
+   - wp4_2
+---
