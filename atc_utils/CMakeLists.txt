@@ -47,10 +47,23 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION} 
   RUNTIME DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
+# Sam: Sam's fix for filepath to rviz_atc_plugin install path
+get_filename_component(build_directory ${CMAKE_BINARY_DIR} DIRECTORY)
+get_filename_component(workspace_directory ${build_directory} DIRECTORY)
+
+# message(workspace_directory = "${workspace_directory}")
+# message(CMAKE_BINARY_DIR="${CMAKE_BINARY_DIR}")
+
+install(TARGETS ${PROJECT_NAME}
+  LIBRARY DESTINATION ${workspace_directory}/install/rviz_atc_plugins/lib)
+
+
 # Tim: Change this filepath to your computer's [rviz_atc_plugins] install path 
 #      (havent figured an elegant way to do this yet)  
-install(TARGETS ${PROJECT_NAME}
-  LIBRARY DESTINATION /home/ubuntu/workspace/caato2_ws/install/rviz_atc_plugins/lib)
+# install(TARGETS ${PROJECT_NAME}
+#   LIBRARY DESTINATION /home/ubuntu/workspace/caato2_ws/install/rviz_atc_plugins/lib)
+
+
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
