@@ -169,11 +169,11 @@ protected:
   QGroupBox* _debug_topic_group_box;
   //QHBoxLayout* debug_topic_layout;
   QGridLayout* debug_topic_layout;
-  //QLineEdit* output_topic_editor_;	// caato_0/cmd_vel
+  //QLineEdit* output_topic_editor_;	// cmd_vel
   //QString output_topic_;
   QString steer_cmds_topic_;
 
-  //QLineEdit* input_imu_topic_editor_;	// caato_0/imu
+  //QLineEdit* input_imu_topic_editor_;	// imu
   //QString imuIn_topic_;
   QLineEdit* fleet_name_editor_;
   QString fleet_name_;

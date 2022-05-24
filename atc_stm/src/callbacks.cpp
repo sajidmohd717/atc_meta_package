@@ -294,7 +294,7 @@ void stopToStmCallback(const atc_msgs::Stop_To_STM::ConstPtr& stopToStmMsg)
 	stop_msg.data = 1;
 	stm_ptr->waypointLogic_ptr->CallbackStop(stop_msg);
 
-//	MoveBaseClient ac("caato_0/move_base", true);
+//	MoveBaseClient ac("move_base", true);
 //    ac.cancelAllGoals();
 
 //    while (!ac.waitForServer(ros::Duration(5.0)))
@@ -376,7 +376,7 @@ bool sendGoal(const geometry_msgs::PoseStamped& nav_goal_pose, bool& goalReached
 //	ROS_INFO("	sendGoal() - UNKNOWN");
 //	return false;
 
-	MoveBaseClient ac("caato_0/move_base", true);
+	MoveBaseClient ac("move_base", true);
 
 	// Assumed was cancel was called b4 this already...
 	//ac.cancelAllGoals();
@@ -445,7 +445,7 @@ bool resetClearCostmapCallback(atc_msgs::Reset_ClearCostMap::Request  &Req, atc_
 	stm_ptr->aprilTagLogic_ptr->reset();
 	stm_ptr->detectorLogic.reset();
 
-    std::string msg = "rosservice call /caato_0/move_base/clear_costmaps";
+    std::string msg = "rosservice call /move_base/clear_costmaps";
     system(msg.c_str());
 
 	Res.movement_mode = atc_stm::movement_mode;
@@ -497,7 +497,7 @@ bool resetClearCostmapCallback(atc_msgs::Reset_ClearCostMap::Request  &Req, atc_
 ////		return false;
 ////	}
 //
-//	MoveBaseClient ac("caato_0/move_base", true);
+//	MoveBaseClient ac("move_base", true);
 //	while (!ac.waitForServer(ros::Duration(5.0)))
 //	{
 //	    ROS_INFO("	Waiting for move_base action server to come up...");

@@ -70,14 +70,14 @@ int main(int argc, char **argv)
   stm.setNodeHandle(nh);
 
   // Topic Subscribers(s)
-  ros::Subscriber imu_sub = nh.subscribe("caato_0/imu", 2, &atc_stm::imuCallback);
-  ros::Subscriber odom_sub = nh.subscribe("caato_0/odom", 2, &atc_stm::odomCallback);
-  ros::Subscriber amcl_pose_sub   = nh.subscribe("caato_0/amcl_pose", 2, &atc_stm::amclPoseCallback);
-  ros::Subscriber drive_panel_sub = nh.subscribe("caato_0/drive_panel/cmd_vel", 2, &atc_stm::drivePanelCallback);
-  ros::Subscriber stop2stm_sub = nh.subscribe("caato_0/Stop_To_STM", 2, &atc_stm::stopToStmCallback);
+  ros::Subscriber imu_sub = nh.subscribe("imu", 2, &atc_stm::imuCallback);
+  ros::Subscriber odom_sub = nh.subscribe("odom", 2, &atc_stm::odomCallback);
+  ros::Subscriber amcl_pose_sub   = nh.subscribe("amcl_pose", 2, &atc_stm::amclPoseCallback);
+  ros::Subscriber drive_panel_sub = nh.subscribe("drive_panel/cmd_vel", 2, &atc_stm::drivePanelCallback);
+  ros::Subscriber stop2stm_sub = nh.subscribe("Stop_To_STM", 2, &atc_stm::stopToStmCallback);
 
   // Topic Publisher(s)
-  ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("caato_0/cmd_vel", 2);
+  ros::Publisher cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 2);
 
   // Service Subscribers(s)
   ros::ServiceServer movement_mode_service = nh.advertiseService("atc_stm/Update_Movement_Mode", atc_stm::updateMovementMode);

@@ -246,8 +246,8 @@ fleet_name_(""), agv_number_("0"), movement_mode(1)
   xnergy_subscriber = nh_.subscribe("/modbus/xnergy_sensors", 2, &ImageTrackerPanel::xnergyCallback, this);
 
   // Messages out
-  stop_to_stm_publisher_ = nh_.advertise<atc_msgs::Stop_To_STM>("caato_0/Stop_To_STM", 1 );
-  latch_And_changeLaserLimit_publisher_ = nh_.advertise<atc_msgs::Latch>("caato_0/Latch", 1 );
+  stop_to_stm_publisher_ = nh_.advertise<atc_msgs::Stop_To_STM>("Stop_To_STM", 1 );
+  latch_And_changeLaserLimit_publisher_ = nh_.advertise<atc_msgs::Latch>("Latch", 1 );
   run_specific_wp_publisher_ = nh_.advertise<atc_msgs::RunSpecificWp>("waypoint_server/RunSpecificWp", 1 );
 
   create_topic_box();
