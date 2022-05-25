@@ -50,7 +50,7 @@ AprilTagLogic::AprilTagLogic(ros::NodeHandle* nh_ptr, std::mutex* mtxPtr) :
 
 
     //nav_goal_pub_ = nh_private.advertise<geometry_msgs::PoseStamped>("move_base_simple/goal", 10);
-    //nav_goal_pub_ = nh_private.advertise<geometry_msgs::PoseStamped>("caato_0/move_base/current_goal", 1);
+    //nav_goal_pub_ = nh_private.advertise<geometry_msgs::PoseStamped>("move_base/current_goal", 1);
     nh_ptr->param("offset_x", offset_x_, 2.0);
     nh_ptr->param("offset_z", offset_z_, 0.0);
     nh_ptr->param("offset_yaw", offset_yaw_, 0.0);
@@ -112,7 +112,7 @@ void AprilTagLogic::aprilTagPoseFrontCb(const apriltag_ros::AprilTagDetectionArr
 #endif
 
     // Mod by Tim:
-    const std::string tf_frame_mod = "caato_0/"+target_frame_front_;
+    const std::string tf_frame_mod = ""+target_frame_front_;
 
 
     if (!msg->detections.size())
@@ -145,7 +145,7 @@ void AprilTagLogic::aprilTagPoseBackCb(const apriltag_ros::AprilTagDetectionArra
 #endif
 
     // Mod by Tim:
-    const std::string tf_frame_mod = "caato_0/"+target_frame_;
+    const std::string tf_frame_mod = ""+target_frame_;
 
 
     if (!msg->detections.size())
@@ -200,7 +200,7 @@ void AprilTagLogic::periodicSpin()
 {
 //	mtx_ptr->lock();
 
-//	const std::string tf_frame_mod = "caato_0/"+target_frame_;
+//	const std::string tf_frame_mod = ""+target_frame_;
 
 	// Send out the notification to rviz (for pushbutton)
 	if(isBackEmpty && isFrontEmpty)

@@ -59,9 +59,9 @@ WaypointLogic::WaypointLogic(ros::NodeHandle* n_ptr, std::mutex* mtxPtr): nh_ptr
     sub_specificwp = nh_ptr->subscribe("waypoint_server/RunSpecificWp", 100, &WaypointLogic::CallbackRunSpecificWp, this);
 
     // Mod by Tim:
-    sub_mission_plan = nh_ptr->subscribe("caato_0/mission_plan", 10, &WaypointLogic::CallbackMissionPlan, this);
-    sub_stop = nh_ptr->subscribe("caato_0/stop", 10, &WaypointLogic::CallbackStop, this);
-    //srv_mission_pan = n.advertiseService("caato_0/mission_plan", &WaypointLogic::CallbackMissionPlan, this);
+    sub_mission_plan = nh_ptr->subscribe("mission_plan", 10, &WaypointLogic::CallbackMissionPlan, this);
+    sub_stop = nh_ptr->subscribe("stop", 10, &WaypointLogic::CallbackStop, this);
+    //srv_mission_pan = n.advertiseService("mission_plan", &WaypointLogic::CallbackMissionPlan, this);
 
 
 }
@@ -286,8 +286,8 @@ bool WaypointLogic::RunWp(atc_msgs::Run_Wp::Request &req, atc_msgs::Run_Wp::Resp
 
     // Mod by Tim:
     //MoveBaseClient ac("move_base", true);
-    //MoveBaseClient ac("caato_0/move_base", true);
-    MoveBaseClient ac("caato_0/move_base", true);
+    //MoveBaseClient ac("move_base", true);
+    MoveBaseClient ac("move_base", true);
 
     ac.cancelAllGoals();
     move_base_msgs::MoveBaseGoal goal;
@@ -375,7 +375,7 @@ bool WaypointLogic::StopWp(atc_msgs::Stop_Wp::Request &req, atc_msgs::Stop_Wp::R
 		atc_stm::bDockToAprilTag = false;
 //	mtx_ptr->unlock();
 
-    system("rostopic pub -1 caato_0/move_base/cancel actionlib_msgs/GoalID -- {} ");
+    system("rostopic pub -1 move_base/cancel actionlib_msgs/GoalID -- {} ");
     res.success = true;
 
 #if DEBUG_WPT_SERVER
@@ -586,7 +586,7 @@ void WaypointLogic::CallbackRunSpecificWp(atc_msgs::RunSpecificWp wp_name_msg)
     wp_list.push_back(wp_name);
 
     // Mod by Tim:
-    MoveBaseClient ac("caato_0/move_base", true);
+    MoveBaseClient ac("move_base", true);
 
     ac.cancelAllGoals();
     move_base_msgs::MoveBaseGoal goal;

@@ -121,7 +121,7 @@ void getCmdGoal(double& cmd_east_m,  double& cmd_north_m, double& cmd_hdg_deg)
 //--------------------------------------------------------------------------------
 //bool sendGoal(const geometry_msgs::PoseStamped& nav_goal_pose, bool& goalReached)
 //{
-//	MoveBaseClient ac("caato_0/move_base", true);
+//	MoveBaseClient ac("move_base", true);
 //    ac.cancelAllGoals();
 //
 //    move_base_msgs::MoveBaseGoal goal;

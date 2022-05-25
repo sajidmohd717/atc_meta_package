@@ -58,9 +58,9 @@ public:
         srv_load = n.advertiseService("waypoint_server/load_wp", &WaypointServer::LoadWp, this);
 
         // Mod by Tim:
-        sub_mission_plan = n.subscribe("caato_0/mission_plan", 10, &WaypointServer::CallbackMissionPlan, this);
-        sub_stop = n.subscribe("caato_0/stop", 10, &WaypointServer::CallbackStop, this);
-        //srv_mission_pan = n.advertiseService("caato_0/mission_plan", &WaypointServer::CallbackMissionPlan, this);
+        sub_mission_plan = n.subscribe("mission_plan", 10, &WaypointServer::CallbackMissionPlan, this);
+        sub_stop = n.subscribe("stop", 10, &WaypointServer::CallbackStop, this);
+        //srv_mission_pan = n.advertiseService("mission_plan", &WaypointServer::CallbackMissionPlan, this);
 
     }
 
@@ -256,8 +256,8 @@ public:
 
         // Mod by Tim:
         //MoveBaseClient ac("move_base", true);
-        //MoveBaseClient ac("caato_0/move_base", true);
-        MoveBaseClient ac("caato_0/move_base", true);
+        //MoveBaseClient ac("move_base", true);
+        MoveBaseClient ac("move_base", true);
 
         ac.cancelAllGoals();
         move_base_msgs::MoveBaseGoal goal;
@@ -346,7 +346,7 @@ public:
     	ROS_INFO("WaypointsServer::StopWp()");
 #endif
         stop = 1;
-        system("rostopic pub -1 caato_0/move_base/cancel actionlib_msgs/GoalID -- {} ");
+        system("rostopic pub -1 move_base/cancel actionlib_msgs/GoalID -- {} ");
         res.success = true;
         return true;
     }
