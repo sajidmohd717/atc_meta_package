@@ -882,21 +882,25 @@ void ImageTrackerPanel::create_status_group_box()
  	ROS_INFO("ImageTrackerPanel::getImuInTopicString in(%s : %s) ", fleet_name_topic.toStdString().c_str(), agv_num_topic.toStdString().c_str());
  #endif
 
-     if( fleet_name_topic == "" )
-     {
-       return "";
-     }
+ 	// Mod by Tim: We are removing the prefix
+//     if( fleet_name_topic == "" )
+//     {
+//       return "";
+//     }
+//
+//     if( agv_num_topic == "" )
+//     {
+//       return "";
+//     }
 
-     if( agv_num_topic == "" )
-     {
-       return "";
-     }
+     // Mod by Tim: We are removing the prefix
+// 	QString temp = fleet_name_topic;
+// 	QString temp0 = temp.append("_");
+// 	QString temp1 = temp.append(agv_num_topic);
+// 	QString temp2 = temp1.append("/imu");
+// 	QString imu_in_topic = temp2;
 
- 	QString temp = fleet_name_topic;
- 	QString temp0 = temp.append("_");
- 	QString temp1 = temp.append(agv_num_topic);
- 	QString temp2 = temp1.append("/imu");
- 	QString imu_in_topic = temp2;
+     QString imu_in_topic = "/imu";
 
  #if DEBUG_IMG_TRK_PANEL
  	ROS_INFO("	getImuInTopicString out(%s) ", imu_in_topic.toStdString().c_str());
@@ -912,21 +916,23 @@ void ImageTrackerPanel::create_status_group_box()
  	ROS_INFO("ImageTrackerPanel::getOdomInTopicString in(%s : %s) ", fleet_name_topic.toStdString().c_str(), agv_num_topic.toStdString().c_str());
  #endif
 
-     if( fleet_name_topic == "" )
-     {
-       return "";
-     }
+ 	// Mod by Tim: We are removing the prefix
+//     if( fleet_name_topic == "" )
+//     {
+//       return "";
+//     }
+//
+//     if( agv_num_topic == "" )
+//     {
+//       return "";
+//     }
 
-     if( agv_num_topic == "" )
-     {
-       return "";
-     }
-
- 	QString temp = fleet_name_topic;
- 	QString temp0 = temp.append("_");
- 	QString temp1 = temp.append(agv_num_topic);
- 	QString temp2 = temp1.append("/odom");
- 	QString imu_in_topic = temp2;
+// 	QString temp = fleet_name_topic;
+// 	QString temp0 = temp.append("_");
+// 	QString temp1 = temp.append(agv_num_topic);
+// 	QString temp2 = temp1.append("/odom");
+// 	QString imu_in_topic = temp2;
+     QString imu_in_topic = "/odom";
 
  #if DEBUG_IMG_TRK_PANEL
  	ROS_INFO("	getOdomInTopicString out(%s) ", imu_in_topic.toStdString().c_str());
@@ -942,21 +948,24 @@ void ImageTrackerPanel::create_status_group_box()
  	ROS_INFO("ImageTrackerPanel::getOdomInTopicString in(%s : %s) ", fleet_name_topic.toStdString().c_str(), agv_num_topic.toStdString().c_str());
  #endif
 
-     if( fleet_name_topic == "" )
-     {
-       return "";
-     }
+ 	// Mod by Tim: We are removing the prefix
+//     if( fleet_name_topic == "" )
+//     {
+//       return "";
+//     }
+//
+//     if( agv_num_topic == "" )
+//     {
+//       return "";
+//     }
 
-     if( agv_num_topic == "" )
-     {
-       return "";
-     }
-
- 	QString temp = fleet_name_topic;
- 	QString temp0 = temp.append("_");
- 	QString temp1 = temp.append(agv_num_topic);
- 	QString temp2 = temp1.append("/amcl_pose");
- 	QString imu_in_topic = temp2;
+     // Mod by Tim: We are removing the prefix
+// 	QString temp = fleet_name_topic;
+// 	QString temp0 = temp.append("_");
+// 	QString temp1 = temp.append(agv_num_topic);
+// 	QString temp2 = temp1.append("/amcl_pose");
+// 	QString imu_in_topic = temp2;
+     QString imu_in_topic = "/amcl_pose";
 
  #if DEBUG_IMG_TRK_PANEL
  	ROS_INFO("	getOdomInTopicString out(%s) ", imu_in_topic.toStdString().c_str());
@@ -973,21 +982,25 @@ void ImageTrackerPanel::create_status_group_box()
  	ROS_INFO("ImageTrackerPanel::getToCmdVelOutTopicString in(%s : %s) ", fleet_name_topic.toStdString().c_str(), agv_num_topic.toStdString().c_str());
  #endif
 
-     if( fleet_name_topic == "" )
-     {
-       return "";
-     }
+ 	// Mod by Tim: We are removing the prefix
+//     if( fleet_name_topic == "" )
+//     {
+//       return "";
+//     }
+//
+//     if( agv_num_topic == "" )
+//     {
+//       return "";
+//     }
 
-     if( agv_num_topic == "" )
-     {
-       return "";
-     }
+     // Mod by Tim: We are removing the prefix
+// 	QString temp = fleet_name_topic;
+// 	QString temp0 = temp.append("_");
+// 	QString temp1 = temp.append(agv_num_topic);
+// 	QString temp2 = temp1.append("/drive_panel/cmd_vel");
+// 	QString cmd_vel_out_topic = temp2;
 
- 	QString temp = fleet_name_topic;
- 	QString temp0 = temp.append("_");
- 	QString temp1 = temp.append(agv_num_topic);
- 	QString temp2 = temp1.append("/drive_panel/cmd_vel");
- 	QString cmd_vel_out_topic = temp2;
+     QString cmd_vel_out_topic = "/drive_panel/cmd_vel";
 
  #if DEBUG_IMG_TRK_PANEL
  	ROS_INFO("	getToCmdVelOutTopicString out(%s) ", cmd_vel_out_topic.toStdString().c_str());
