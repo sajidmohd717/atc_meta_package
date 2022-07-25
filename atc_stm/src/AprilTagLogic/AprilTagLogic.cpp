@@ -370,32 +370,55 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 #endif
 		  geometry_msgs::TransformStamped tf;
 		  geometry_msgs::PoseStamped marker_pose_avg_map_;
+
+		  // Mod by Tim:
+		  std::string tgtTagFrameTest = idToString(closestTrolleyID);
+		  while(!buffer_all_.canTransform("map", tgtTagFrameTest, ros::Time(0), ros::Duration(2.0)))
+		  {
+			ROS_WARN("calcMotionGoal() canTransform() fail!");
+		  }
+
 		  try
 		  {
 //			ROS_INFO("	Getting marker_pose_map_...");
 //			  buffer_back_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map");
 //			  std::string tgtTagFrame = idToString(closestTrolleyID);
 //			  tf = buffer_back_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6));
-
+			ros::Time now = ros::Time::now();
 			  if(closestIsfromBackCamera)
 			  {
 				  ROS_INFO("calcMotionGoal() closestIsfrom Back Camera...");
-				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map");
+				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(2.0));
+				ROS_INFO("failed at second transform");
 			      std::string tgtTagFrame = idToString(closestTrolleyID);
 
 //				  tf = buffer_back_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(3.0));
 //				  tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time::now(), ros::Duration(3.0));
-			      tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
+
+				//21st July 2022 -  Mod by Tim:
+				// while(!buffer_all_.canTransform("map", tgtTagFrame, ros::Time(), ros::Duration(1.0)));
+
+				//
+				tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
+				// tf = buffer_all_.lookupTransform("map",ros::Time(0) + ros::Duration(0.2), tgtTagFrame.c_str(), ros::Time(0), "map", ros::Duration(6.0));
+
 			  }
 			  else
 			  {
 				  ROS_INFO("calcMotionGoal() closestIsfrom Front Camera...");
-				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map");
+				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(2.0));
 			      std::string tgtTagFrame = idToString(closestTrolleyID);
-
+				ROS_INFO("failed at second transform");
 //				  tf = buffer_front_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(3.0));
 //				  tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time::now(), ros::Duration(3.0));
-			      tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
+                                //21st July 2022 -  Mod by Tim:
+                                // while(!buffer_all_.canTransform("map", tgtTagFrame, ros::Time(), ros::Duration(1.0)));
+
+                                //
+
+				tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
+				// tf = buffer_all_.lookupTransform("map",ros::Time(0) + ros::Duration(0.2), tgtTagFrame.c_str(), ros::Time(0), "map", ros::Duration(6.0));
+
 			  }
 
 		  }
@@ -509,7 +532,7 @@ bool AprilTagLogic::calcDockingCmds(double& linearSpdCmd, double& linearYawRateC
 //		  const double P_linear = 0.0009;
 		  const double& MAX_SPEED_METRE_SEC = 0.3;
 		  bool hasReached1 = false;
-		  const double tagAreaSetPoint = (bChargingDock) ? (180000):(180000);
+		  const double tagAreaSetPoint = (bChargingDock) ? (180000):(150000);
 		  const double P_linear = (bChargingDock) ? (0.0009):(0.0009);
 		  linearSpdCmd = calculateLinearSpeedCommand(P_linear, MAX_SPEED_METRE_SEC, tagAreaSetPoint, tagArea, hasReached1);
 
