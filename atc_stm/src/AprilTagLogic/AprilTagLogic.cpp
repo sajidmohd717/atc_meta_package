@@ -395,7 +395,7 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 			  {
 				  //ROS_INFO("calcMotionGoal() closestIsfrom Front Camera...");
 			  }
-				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(2.0));
+				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(6.0));
 				  std::string tgtTagFrame = idToString(closestTrolleyID);
 				  //ROS_INFO("failed at second transform");
 				  tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
@@ -438,7 +438,7 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 		  // orientation from lookupTransform between map and Apriltag
 //		  geometry_msgs::PoseStamped nav_goal;
 //		  offset_x_ = (bIsTrolleyFront) ? (-2.0f) : (2.0f);
-		  offset_x_ = (bIsTrolleyFront) ? (-1.2f) : (1.2f);
+		  offset_x_ = (bIsTrolleyFront) ? (-1.6f) : (1.6f);
 		  nav_goal_current = marker_pose_avg_map_;
 		  nav_goal_current.header.frame_id = "map";
 		  nav_goal_current.header.stamp = ros::Time::now();
@@ -512,7 +512,7 @@ bool AprilTagLogic::calcDockingCmds(double& linearSpdCmd, double& linearYawRateC
 //		  const double P_linear = 0.0009;
 		  const double& MAX_SPEED_METRE_SEC = 0.3;
 		  bool hasReached1 = false;
-		  const double tagAreaSetPoint = (bChargingDock) ? (180000):(150000);
+		  const double tagAreaSetPoint = (bChargingDock) ? (180000):(130000);
 		  const double P_linear = (bChargingDock) ? (0.0009):(0.0009);
 		  linearSpdCmd = calculateLinearSpeedCommand(P_linear, MAX_SPEED_METRE_SEC, tagAreaSetPoint, tagArea, hasReached1);
 
