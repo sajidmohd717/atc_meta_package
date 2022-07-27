@@ -124,19 +124,20 @@ void calculateAverage(std::vector<geometry_msgs::PoseStamped>& marker_pose_vec_,
 bool goalChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2, const double& tagArea)
 {
 	// Tag Area, when near ~4,000-166,000
-	if(tagArea > 8000)
-//	if(tagArea > 10000)
+	//if(tagArea > 8000)
+	if(tagArea > 10000)
 	{
-		bool bChangeDetected = poseChangeDetected(pose1, pose2);
-//		ROS_INFO("goalChangeDetected() tagArea:%.2f, bChangeDetected:%i", tagArea, bChangeDetected);
+		bool bChangeDetected = poseChangeDetected(pose1, pose2, tagArea);
+
 		return bChangeDetected;
 	}
+
 
 	return false;
 }
 
 //--------------------------------------------------------------------------------
-bool poseChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2)
+bool poseChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2, const double& tagArea )
 {
 //	const bool isYawChanged = yawChangeDetected(pose1, pose2);
 
@@ -154,7 +155,7 @@ bool poseChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_
 
 	if(isChanged)
 	{
-		ROS_INFO("	poseChangeDetected() deltaX:%.2f, deltaZ:%.2f", deltaX, deltaZ);
+		ROS_INFO("	poseChangeDetected() tagArea:%.2f, deltaX:%.2f, Z:%.2f, yawQuatZ:%.2f, W:%.2f", tagArea, deltaX, deltaZ, yawQuatZ, yawQuatW);
 	}
 
 	return isChanged;

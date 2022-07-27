@@ -11,6 +11,8 @@
 #include "../callbacks.h"
 
 #define DEBUG_APRILTAG_SERVO 1
+#define DEBUG_APRILTAG_SERVO_FRONT 0
+#define DEBUG_APRILTAG_SERVO_BACK 0
 #define DEBUG_APRILTAG_YAW_CMD 0
 #define DEBUG_APRILTAG_SPD_CMD 0
 
@@ -107,8 +109,8 @@ void AprilTagLogic::aprilTagPoseFrontCb(const apriltag_ros::AprilTagDetectionArr
 {
 	mtx_ptr->lock();
 
-#if DEBUG_APRILTAG_SERVO
-//	  ROS_INFO("aprilTagPose Front Cb() ");
+#if DEBUG_APRILTAG_SERVO_FRONT
+	  ROS_INFO("aprilTagPose Front Cb() ");
 #endif
 
     // Mod by Tim:
@@ -118,7 +120,7 @@ void AprilTagLogic::aprilTagPoseFrontCb(const apriltag_ros::AprilTagDetectionArr
     if (!msg->detections.size())
     {
 #if DEBUG_APRILTAG_SERVO
-//	  ROS_WARN("	aprilTagPoseFrontCb() 0! msg frame:%s", msg->header.frame_id.c_str());
+	  //ROS_WARN("	aprilTagPoseFrontCb() 0! msg frame:%s", msg->header.frame_id.c_str());
 #endif
       isFrontEmpty = true;
 	  mtx_ptr->unlock();
@@ -126,7 +128,7 @@ void AprilTagLogic::aprilTagPoseFrontCb(const apriltag_ros::AprilTagDetectionArr
     }
     else
     {
-//    	ROS_INFO("	aprilTagPose Front Cb() detected");
+    	//ROS_INFO("	aprilTagPose Front Cb() detected");
     	isFrontEmpty = false;
     	msgToTagData(msg, tf_frame_mod, false);
     }
@@ -140,8 +142,8 @@ void AprilTagLogic::aprilTagPoseBackCb(const apriltag_ros::AprilTagDetectionArra
 {
 	mtx_ptr->lock();
 
-#if DEBUG_APRILTAG_SERVO
-//	  ROS_INFO("aprilTagPose Back Cb() ");
+#if DEBUG_APRILTAG_SERVO_BACK
+	  ROS_INFO("aprilTagPose Back Cb() ");
 #endif
 
     // Mod by Tim:
@@ -151,7 +153,7 @@ void AprilTagLogic::aprilTagPoseBackCb(const apriltag_ros::AprilTagDetectionArra
     if (!msg->detections.size())
     {
 #if DEBUG_APRILTAG_SERVO
-//	  ROS_WARN("	aprilTagPoseBackCb() 0! msg frame:%s", msg->header.frame_id.c_str());
+	  //ROS_WARN("	aprilTagPoseBackCb() 0! msg frame:%s", msg->header.frame_id.c_str());
 #endif
       isBackEmpty = true;
 	  mtx_ptr->unlock();
@@ -159,7 +161,7 @@ void AprilTagLogic::aprilTagPoseBackCb(const apriltag_ros::AprilTagDetectionArra
     }
     else
     {
-//    	ROS_INFO("	aprilTagPose Back Cb() detected");
+    	//ROS_INFO("	aprilTagPose Back Cb() detected");
     	isBackEmpty = false;
     	msgToTagData(msg, tf_frame_mod, true);
     }
@@ -380,52 +382,30 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 
 		  try
 		  {
-//			ROS_INFO("	Getting marker_pose_map_...");
+//			  ROS_INFO("	Getting marker_pose_map_...");
 //			  buffer_back_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map");
 //			  std::string tgtTagFrame = idToString(closestTrolleyID);
 //			  tf = buffer_back_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6));
-			ros::Time now = ros::Time::now();
+			  ros::Time now = ros::Time::now();
 			  if(closestIsfromBackCamera)
 			  {
-				  ROS_INFO("calcMotionGoal() closestIsfrom Back Camera...");
-				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(2.0));
-				ROS_INFO("failed at second transform");
-			      std::string tgtTagFrame = idToString(closestTrolleyID);
-
-//				  tf = buffer_back_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(3.0));
-//				  tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time::now(), ros::Duration(3.0));
-
-				//21st July 2022 -  Mod by Tim:
-				// while(!buffer_all_.canTransform("map", tgtTagFrame, ros::Time(), ros::Duration(1.0)));
-
-				//
-				tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
-				// tf = buffer_all_.lookupTransform("map",ros::Time(0) + ros::Duration(0.2), tgtTagFrame.c_str(), ros::Time(0), "map", ros::Duration(6.0));
-
+				  //ROS_INFO("calcMotionGoal() closestIsfrom Back Camera...");
 			  }
 			  else
 			  {
-				  ROS_INFO("calcMotionGoal() closestIsfrom Front Camera...");
-				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(2.0));
-			      std::string tgtTagFrame = idToString(closestTrolleyID);
-				ROS_INFO("failed at second transform");
-//				  tf = buffer_front_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(3.0));
-//				  tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time::now(), ros::Duration(3.0));
-                                //21st July 2022 -  Mod by Tim:
-                                // while(!buffer_all_.canTransform("map", tgtTagFrame, ros::Time(), ros::Duration(1.0)));
-
-                                //
-
-				tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
-				// tf = buffer_all_.lookupTransform("map",ros::Time(0) + ros::Duration(0.2), tgtTagFrame.c_str(), ros::Time(0), "map", ros::Duration(6.0));
-
+				  //ROS_INFO("calcMotionGoal() closestIsfrom Front Camera...");
 			  }
+				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(2.0));
+				  std::string tgtTagFrame = idToString(closestTrolleyID);
+				  //ROS_INFO("failed at second transform");
+				  tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
+				  // tf = buffer_all_.lookupTransform("map",ros::Time(0) + ros::Duration(0.2), tgtTagFrame.c_str(), ros::Time(0), "map", ros::Duration(6.0));
 
 		  }
 		  catch (tf2::TransformException &ex)
 		  {
-			ROS_WARN("Failure: %s", ex.what());
-			return false;
+			  ROS_WARN("Failure: %s", ex.what());
+			  return false;
 		  }
 
 		  // Use yaw from tf_echo tools
