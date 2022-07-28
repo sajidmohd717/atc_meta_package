@@ -124,21 +124,14 @@ void calculateAverage(std::vector<geometry_msgs::PoseStamped>& marker_pose_vec_,
 bool goalChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2, const double& tagArea)
 {
 	// Tag Area, when near ~4,000-166,000
-	//if(tagArea > 8000)
-	//if(tagArea > 40000)
-	//{
-		bool bChangeDetected = poseChangeDetected(pose1, pose2);
-//		bool bChangeDetected = yawChangeDetected(pose1, pose2);
-		if(bChangeDetected)
-		{
-			ROS_INFO("	goalChangeDetected: bChangeDetected:%i ", bChangeDetected);
-		}
+	bool bChangeDetected = poseChangeDetected(pose1, pose2);
+//	bool bChangeDetected = yawChangeDetected(pose1, pose2);
+	if(bChangeDetected)
+	{
+		ROS_INFO("	goalChangeDetected: bChangeDetected:%i ", bChangeDetected);
+	}
 
-		return bChangeDetected;
-	//}
-
-
-	//return false;
+	return bChangeDetected;
 }
 
 //--------------------------------------------------------------------------------
