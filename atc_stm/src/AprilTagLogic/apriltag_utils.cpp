@@ -125,19 +125,24 @@ bool goalChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_
 {
 	// Tag Area, when near ~4,000-166,000
 	//if(tagArea > 8000)
-	if(tagArea > 10000)
-	{
-		bool bChangeDetected = poseChangeDetected(pose1, pose2, tagArea);
+	//if(tagArea > 40000)
+	//{
+		bool bChangeDetected = poseChangeDetected(pose1, pose2);
+//		bool bChangeDetected = yawChangeDetected(pose1, pose2);
+		if(bChangeDetected)
+		{
+			ROS_INFO("	goalChangeDetected: bChangeDetected:%i ", bChangeDetected);
+		}
 
 		return bChangeDetected;
-	}
+	//}
 
 
-	return false;
+	//return false;
 }
 
 //--------------------------------------------------------------------------------
-bool poseChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2, const double& tagArea )
+bool poseChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_msgs::PoseStamped& pose2)
 {
 //	const bool isYawChanged = yawChangeDetected(pose1, pose2);
 
@@ -150,12 +155,15 @@ bool poseChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_
 
 //	return(	(deltaX > 0.2f) || (deltaZ > 0.2f) || isYawChanged);
 //	const bool isChanged = ((deltaX > 0.2f) || (deltaZ > 0.2f) || (yawQuatZ > 0.05f) || (yawQuatW > 0.05f));
-	const bool isChanged = ((deltaX > 0.4f) || (deltaZ > 0.4f) || (yawQuatZ > 0.1f) || (yawQuatW > 0.1f));
+//	const bool isChanged = ((deltaX > 0.4f) || (deltaZ > 0.4f) || (yawQuatZ > 0.1f) || (yawQuatW > 0.1f));
+//	const bool isChanged = ((yawQuatZ > 0.1f) || (yawQuatW > 0.1f));
+	const bool isChanged = ((deltaX > 0.8f) || (deltaZ > 0.8f));
+
 //	const bool isChanged = isYawChanged;
 
 	if(isChanged)
 	{
-		ROS_INFO("	poseChangeDetected() tagArea:%.2f, deltaX:%.2f, Z:%.2f, yawQuatZ:%.2f, W:%.2f", tagArea, deltaX, deltaZ, yawQuatZ, yawQuatW);
+		ROS_INFO("	poseChangeDetected() deltaX:%.2f, Z:%.2f, yawQuatZ:%.2f, W:%.2f", deltaX, deltaZ, yawQuatZ, yawQuatW);
 	}
 
 	return isChanged;
@@ -180,7 +188,7 @@ bool yawChangeDetected(const geometry_msgs::PoseStamped& marker_pose_camera_avg,
 	atc_utils::quaternion2rpy(quat_tf2, roll2Rad, pitch2Rad, yaw2Rad);
 
 	const double deltaDegs = atc_utils::to_degrees(atc_utils::shortest_angular_distance(yaw1Rad, yaw2Rad));
-	if(deltaDegs > 6.0)
+	if(fabs(deltaDegs) > 10.0)
 	{
 		ROS_INFO("	yawChangeDetected() yaw1deg:%.2f, yaw2deg:%.2f, deltaDegs:%.2f",
 				atc_utils::to_degrees(yaw1Rad), atc_utils::to_degrees(yaw2Rad), deltaDegs);

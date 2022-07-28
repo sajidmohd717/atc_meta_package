@@ -51,7 +51,7 @@ void populateMarker(const std::map<int, TagData>& tags_container, geometry_msgs:
 void calculateAverage(std::vector<geometry_msgs::PoseStamped>& marker_pose_vec_, geometry_msgs::PoseStamped& marker_pose_camera_avg);
 
 bool goalChangeDetected(const geometry_msgs::PoseStamped& marker_pose_camera_avg, const geometry_msgs::PoseStamped& marker_pose_camera_, const double& tagArea);
-bool poseChangeDetected(const geometry_msgs::PoseStamped& marker_pose_camera_avg, const geometry_msgs::PoseStamped& marker_pose_camera_, const double& tagArea);
+bool poseChangeDetected(const geometry_msgs::PoseStamped& marker_pose_camera_avg, const geometry_msgs::PoseStamped& marker_pose_camera_);
 bool yawChangeDetected(const geometry_msgs::PoseStamped& marker_pose_camera_avg, const geometry_msgs::PoseStamped& marker_pose_camera_);
 
 //bool sendGoal(const geometry_msgs::PoseStamped& nav_goal_pose, bool& stagingGoalReached);

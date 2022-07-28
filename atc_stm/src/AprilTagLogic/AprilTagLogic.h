@@ -54,7 +54,10 @@ public:
 	bool stagingGoalCalculated;
 	bool stagingGoalReached;
 	bool dockingGoalReached;
-	bool bFirstAprilTagLoop;
+
+	// Mod by Tim: To effect goal check upon reaching staging goal
+//	bool bFirstAprilTagLoop;
+//	int navGoalChangedCounter;
 
 	geometry_msgs::PoseStamped nav_goal_previous;
 	geometry_msgs::PoseStamped nav_goal_current;

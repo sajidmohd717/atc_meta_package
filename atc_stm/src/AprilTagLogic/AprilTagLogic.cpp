@@ -57,7 +57,7 @@ AprilTagLogic::AprilTagLogic(ros::NodeHandle* nh_ptr, std::mutex* mtxPtr) :
     nh_ptr->param("offset_z", offset_z_, 0.0);
     nh_ptr->param("offset_yaw", offset_yaw_, 0.0);
 
-    bFirstAprilTagLoop = true;
+//    bFirstAprilTagLoop = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ void AprilTagLogic::reset()
 	stagingGoalReached = false;
 	dockingGoalReached = false;
 	bDockToAprilTag = false;
-	bFirstAprilTagLoop = true;
+//	bFirstAprilTagLoop = true;
 
 	marker_pose_camera_avg.pose.position.x = 0.0;
 	marker_pose_camera_avg.pose.position.y = 0.0;
@@ -333,6 +333,7 @@ bool AprilTagLogic::assignTargetTrolley(const std::map<int, TagData>& tags_conta
 		{
 			//geometry_msgs::PoseStamped marker_pose_camera_avg;
 			marker_pose_camera_avg.header = marker_pose_camera_new.header;
+//			marker_pose_camera_avg.header.stamp = ros::Time::now();
 			atc_stm::calculateAverage(marker_pose_vec_, marker_pose_camera_avg);
 //			marker_pose_camera_avg_previous = marker_pose_camera_avg;
 
@@ -375,7 +376,7 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 
 		  // Mod by Tim:
 		  std::string tgtTagFrameTest = idToString(closestTrolleyID);
-		  while(!buffer_all_.canTransform("map", tgtTagFrameTest, ros::Time(0), ros::Duration(2.0)))
+		  while(!buffer_all_.canTransform("map", tgtTagFrameTest, ros::Time(0), ros::Duration(6.0)))
 		  {
 			ROS_WARN("calcMotionGoal() canTransform() fail!");
 		  }
@@ -395,11 +396,11 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 			  {
 				  //ROS_INFO("calcMotionGoal() closestIsfrom Front Camera...");
 			  }
-				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(6.0));
-				  std::string tgtTagFrame = idToString(closestTrolleyID);
-				  //ROS_INFO("failed at second transform");
-				  tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
-				  // tf = buffer_all_.lookupTransform("map",ros::Time(0) + ros::Duration(0.2), tgtTagFrame.c_str(), ros::Time(0), "map", ros::Duration(6.0));
+		      buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(6.0));
+			  std::string tgtTagFrame = idToString(closestTrolleyID);
+			  //ROS_INFO("failed at second transform");
+			  tf = buffer_all_.lookupTransform("map", tgtTagFrame.c_str(), ros::Time(0), ros::Duration(6.0));
+			  // tf = buffer_all_.lookupTransform("map",ros::Time(0) + ros::Duration(0.2), tgtTagFrame.c_str(), ros::Time(0), "map", ros::Duration(6.0));
 
 		  }
 		  catch (tf2::TransformException &ex)
@@ -438,7 +439,7 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 		  // orientation from lookupTransform between map and Apriltag
 //		  geometry_msgs::PoseStamped nav_goal;
 //		  offset_x_ = (bIsTrolleyFront) ? (-2.0f) : (2.0f);
-		  offset_x_ = (bIsTrolleyFront) ? (-1.6f) : (1.6f);
+		  offset_x_ = (bIsTrolleyFront) ? (-1.2f) : (1.2f);
 		  nav_goal_current = marker_pose_avg_map_;
 		  nav_goal_current.header.frame_id = "map";
 		  nav_goal_current.header.stamp = ros::Time::now();
@@ -461,13 +462,24 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 }
 
 //--------------------------------------------------------------------------------
+// Called by State Transition Manager
 bool AprilTagLogic::checkMotionGoalChanged()
 {
-//	  if(goalChangeDetected(nav_goal_current, nav_goal_previous, tagArea) || bFirstAprilTagLoop)
-	  if(goalChangeDetected(marker_pose_camera_avg, marker_pose_camera_avg_previous, tagArea) || bFirstAprilTagLoop)
-	  {
 #if DEBUG_APRILTAG_SERVO
-		ROS_INFO("AprilTagLogic::checkMotionGoalChanged() goal has changed!");
+//		ROS_INFO("AprilTagLogic::checkMotionGoalChanged() bFirstAprilTagLoop:%i ", bFirstAprilTagLoop);
+#endif
+
+//	  if(goalChangeDetected(nav_goal_current, nav_goal_previous, tagArea) || bFirstAprilTagLoop)
+	  //if(goalChangeDetected(marker_pose_camera_avg, marker_pose_camera_avg_previous, tagArea) || bFirstAprilTagLoop)
+
+	  bool bGoalHasChanged = goalChangeDetected(marker_pose_camera_avg, marker_pose_camera_avg_previous, tagArea);
+//	  bool bGoalHasChanged = goalChangeDetected(nav_goal_current, nav_goal_previous, tagArea);
+
+	  if(bGoalHasChanged)
+	  {
+
+#if DEBUG_APRILTAG_SERVO
+		ROS_INFO("	checkMotionGoalChanged() MarkerPose has changed! tagArea:%.2f ", tagArea);
 #endif
 		return true;
 	  }
@@ -485,7 +497,14 @@ void AprilTagLogic::sendMotionGoal()
 		nav_goal_previous = nav_goal_current;
 		marker_pose_camera_avg_previous = marker_pose_camera_avg;
 
-		bFirstAprilTagLoop = false;
+//		if(!stagingGoalReached)
+//		{
+			marker_pose_vec_.clear();
+//			bFirstAprilTagLoop = false;
+			ROS_INFO("AprilTagLogic::sendMotionGoal(), reseting marker_pose_vec_.size():%i... ", marker_pose_vec_.size());
+
+//		}
+
 }
 
 //--------------------------------------------------------------------------------
@@ -512,8 +531,8 @@ bool AprilTagLogic::calcDockingCmds(double& linearSpdCmd, double& linearYawRateC
 //		  const double P_linear = 0.0009;
 		  const double& MAX_SPEED_METRE_SEC = 0.3;
 		  bool hasReached1 = false;
-		  const double tagAreaSetPoint = (bChargingDock) ? (180000):(130000);
-		  const double P_linear = (bChargingDock) ? (0.0009):(0.0009);
+		  const double tagAreaSetPoint = (bChargingDock) ? (180000):(60600);
+	      const double P_linear = (bChargingDock) ? (0.0025):(0.0025);
 		  linearSpdCmd = calculateLinearSpeedCommand(P_linear, MAX_SPEED_METRE_SEC, tagAreaSetPoint, tagArea, hasReached1);
 
 			// Is charging dock..? Move forward in that case...
@@ -523,7 +542,7 @@ bool AprilTagLogic::calcDockingCmds(double& linearSpdCmd, double& linearYawRateC
 		  //const double MAX_YAW_RATE_RADSEC = 0.1;
 		  //const double P_yaw = 0.00625;
 		  //const double MAX_YAW_RATE_RADSEC = 0.25;
-		  const double P_yaw = 0.0125;
+		  const double P_yaw = 0.009;
 		  const double MAX_YAW_RATE_RADSEC = 0.5;
 		  bool hasReached2 = false;
 		  linearYawRateCmd = calculateYawRateCommand(P_yaw, MAX_YAW_RATE_RADSEC, pixelPosRight, hasReached2);
@@ -531,19 +550,21 @@ bool AprilTagLogic::calcDockingCmds(double& linearSpdCmd, double& linearYawRateC
 		  // New function, for case where AGV switches from trolley front tag to trolley back tag
 		  if(marker_pose_vec_.size() != MAX_POSE_COUNT-1)
 		  {
-			  ROS_INFO("calcDockingCmds() - Docking state to aquire more data:%i < MAX_POSE_COUNT:%i", marker_pose_vec_.size(), MAX_POSE_COUNT);
+			  ROS_INFO("calcDockingCmds() - Docking state insufficient data: %i < MAX_POSE_COUNT:%i", marker_pose_vec_.size(), MAX_POSE_COUNT);
 			  linearYawRateCmd = 0.0;
 			  linearSpdCmd = 0.0;
 		  }
 
 
-		  dockingGoalReached = (hasReached1 && hasReached2) ? (true) : (false);
+		  //dockingGoalReached = (hasReached1 && hasReached2) ? (true) : (false);
+		  // Mod by Tim: Took out hasReached2, as sometimes the AMR has difficulty reaching yaw set point due to poor offset
+		  dockingGoalReached = (hasReached1) ? (true) : (false);
 		  return true;
 	}
 	else
 	{
 		// Reset if this condition hits...
-#if DEBUG_APRILTAG_SERVO
+#if 1
 		ROS_WARN("calcDockingCmds() - unknown state! stagingGoalReached:%i, dockingGoalReached:%i ",
 				stagingGoalReached, dockingGoalReached);
 #endif
