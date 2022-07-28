@@ -125,7 +125,7 @@ bool goalChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_
 {
 	// Tag Area, when near ~4,000-166,000
 	//if(tagArea > 8000)
-	if(tagArea > 10000)
+	if(tagArea > 40000)
 	{
 		bool bChangeDetected = poseChangeDetected(pose1, pose2, tagArea);
 
