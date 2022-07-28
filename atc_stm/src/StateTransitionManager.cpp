@@ -16,7 +16,10 @@
 #define DEBUG_STM 0
 #define DEBUG_STM_CALC_YAWRATE_CMD 0
 #define DEBUG_STM_CALC_APPROX_GOAL 0
-#define DEBUG_STM_WAYPOINTMODES 1
+
+#define DEBUG_STM_WAYPOINTMODES_CORE 1
+#define DEBUG_STM_WAYPOINTMODES_ADDITIONAL 0
+
 
 namespace atc_stm {
 
@@ -88,8 +91,8 @@ void StateTransitionManager::updateCommandedOdomHeading (const double& hdg_degs)
 bool StateTransitionManager::doWaypointDetectorMode()
 {
 
-#if DEBUG_STM_WAYPOINTMODES
-//		ROS_INFO("StateTransitionManager::doWaypointDetectorMode() bNavToTrolley:%i ", bNavToTrolley);
+#if DEBUG_STM_WAYPOINTMODES_CORE
+		ROS_INFO("StateTransitionManager::doWaypointDetectorMode() bNavToTrolley:%i ", bNavToTrolley);
 #endif
 
 		// Trolley detector mode
@@ -97,7 +100,7 @@ bool StateTransitionManager::doWaypointDetectorMode()
 		{
 			if(detectorLogic.bDetectorHasTarget && !detectorLogic.bApproxGoalReached)
 			{
-#if DEBUG_STM_WAYPOINTMODES
+#if DEBUG_STM_WAYPOINTMODES_CORE
 				ROS_INFO("	STM-WPT-Det 1: Heading to approx goal... bDetectorGoalSent:%i", atc_stm::bDetectorGoalSent);
 #endif
 				geometry_msgs::PoseStamped approx_goal_pose;
@@ -111,7 +114,7 @@ bool StateTransitionManager::doWaypointDetectorMode()
 					atc_stm::bDetectorGoalSent = true;
 				}
 
-#if DEBUG_STM_WAYPOINTMODES
+#if DEBUG_STM_WAYPOINTMODES_CORE
 				ROS_INFO("	STM-WPT-Det 1: Stop & sending... bDetectorGoalSent:%i", atc_stm::bDetectorGoalSent);
 #endif
 
@@ -119,7 +122,7 @@ bool StateTransitionManager::doWaypointDetectorMode()
 			}
 			else if(detectorLogic.bDetectorHasTarget && detectorLogic.bApproxGoalReached)
 			{
-#if DEBUG_STM_WAYPOINTMODES
+#if DEBUG_STM_WAYPOINTMODES_CORE
 				ROS_INFO("	STM-WPT-Det 2: Approx goal reached...bDetectorGoalSent:%i", atc_stm::bDetectorGoalSent);
 #endif
 				// Reset the triggers
@@ -136,7 +139,7 @@ bool StateTransitionManager::doWaypointDetectorMode()
 			}
 			else
 			{
-#if DEBUG_STM_WAYPOINTMODES
+#if DEBUG_STM_WAYPOINTMODES_CORE
 				ROS_WARN("	STM-WPT-Det 3: UNKNOWN STATE! (Default Waypoint Logic)");
 #endif
 				// Reset the triggers
@@ -153,15 +156,15 @@ bool StateTransitionManager::doWaypointDetectorMode()
 		}
 		else
 		{
-#if DEBUG_STM_WAYPOINTMODES
-			//ROS_WARN("	STM-WPT-Det 4: UNKNOWN STATE! (Default Waypoint Logic)");
+#if DEBUG_STM_WAYPOINTMODES_ADDITIONAL
+			ROS_WARN("	STM-WPT-Det 4: UNKNOWN STATE! (Default Waypoint Logic)");
 #endif
 //			atc_stm::checkGoalStatus(detectorLogic.bGoalSent, detectorLogic.bApproxGoalReached);
 //			publishAgvStatus(atc_stm::movement_mode, atc_stm::agv_state, "In Waypoint Patrol mode(4)..");
 			return true;
 		}
 
-#if DEBUG_STM_WAYPOINTMODES
+#if DEBUG_STM_WAYPOINTMODES_CORE
 		ROS_WARN("	STM-WPT-Det 5: UNKNOWN STATE! bNavToTrolley:%i, bDetectorHasTarget:%i, bApproxGoalReached%i",
 				atc_stm::bNavToTrolley, detectorLogic.bDetectorHasTarget, detectorLogic.bApproxGoalReached);
 #endif
@@ -179,8 +182,8 @@ bool StateTransitionManager::doWaypointDockingMode(ros::Publisher& cmd_vel_pub)
 
 		if(!aprilTagLogic_ptr->stagingGoalReached)
 		{
-#if DEBUG_STM_WAYPOINTMODES
-//		ROS_INFO("	STM-WPT-AT 1: Heading to staging goal...");
+#if DEBUG_STM_WAYPOINTMODES_ADDITIONAL
+		ROS_INFO("	STM-WPT-AT 1: Heading to staging goal...");
 #endif
 
 			atc_stm::agv_state = atc_stm::AGV_STATE::COARSE_GUIDANCE;
@@ -204,8 +207,8 @@ bool StateTransitionManager::doWaypointDockingMode(ros::Publisher& cmd_vel_pub)
 		}
 		else if(aprilTagLogic_ptr->stagingGoalReached && !aprilTagLogic_ptr->dockingGoalReached)
 		{
-#if DEBUG_STM_WAYPOINTMODES
-//		ROS_INFO("	STM-WPT-AT 2: Steer for docking");
+#if DEBUG_STM_WAYPOINTMODES_ADDITIONAL
+		ROS_INFO("	STM-WPT-AT 2: Steer for docking");
 #endif
 			geometry_msgs::PoseStamped staging_goal_pose;
 			if(!aprilTagLogic_ptr->calcMotionGoal(staging_goal_pose))
@@ -246,12 +249,14 @@ bool StateTransitionManager::doWaypointDockingMode(ros::Publisher& cmd_vel_pub)
 		}
 		else if(aprilTagLogic_ptr->dockingGoalReached)
 		{
-#if DEBUG_STM_WAYPOINTMODES
+#if DEBUG_STM_WAYPOINTMODES_CORE
 			ROS_INFO("	STM-WPT-AT 3: Docked! stagingGoalReached:%i, dockingGoalReached:%i ",
 					aprilTagLogic_ptr->stagingGoalReached, aprilTagLogic_ptr->dockingGoalReached);
 #endif
 
-//			aprilTagLogic_ptr->reset();
+			// Mod by Tim (29th July 2022)
+			// Reset the states and put to manual mode
+			aprilTagLogic_ptr->reset();
 
 			atc_stm::movement_mode = atc_stm::MOVEMENT_MODE::MANUAL_STEER;
 			atc_stm::agv_state = atc_stm::AGV_STATE::JOYSTICK_STEER;
@@ -262,7 +267,7 @@ bool StateTransitionManager::doWaypointDockingMode(ros::Publisher& cmd_vel_pub)
 		}
 		else
 		{
-#if DEBUG_STM_WAYPOINTMODES
+#if DEBUG_STM_WAYPOINTMODES_CORE
 			ROS_WARN("	STM-WPT-AT 4: UNKNOWN STATE! bDockToAprilTag:%i, stagingGoalReached:%i, dockingGoalReached:%i",
 					bDockToAprilTag, aprilTagLogic_ptr->stagingGoalReached, aprilTagLogic_ptr->dockingGoalReached);
 #endif
@@ -271,7 +276,7 @@ bool StateTransitionManager::doWaypointDockingMode(ros::Publisher& cmd_vel_pub)
 
 	}
 
-#if DEBUG_STM_WAYPOINTMODES
+#if DEBUG_STM_WAYPOINTMODES_CORE
 	ROS_WARN("	STM-WPT-AT 5: UNKNOWN STATE! bDockToAprilTag:%i, stagingGoalReached:%i, dockingGoalReached:%i",
 			bDockToAprilTag, aprilTagLogic_ptr->stagingGoalReached, aprilTagLogic_ptr->dockingGoalReached);
 #endif

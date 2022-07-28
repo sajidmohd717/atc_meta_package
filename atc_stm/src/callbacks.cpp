@@ -242,9 +242,13 @@ bool dockToTag(atc_msgs::Dock_To_Tag::Request  &Req, atc_msgs::Dock_To_Tag::Resp
 {
 	mtx.lock();
 
+	// Mod by Tim (28th July 2022):
+	// Set the necessary variables, upon the svc call...
 	bDockToAprilTag = Req.dock;
-
-	ROS_INFO("dockToTag(%i)...", bDockToAprilTag);
+//	atc_stm::movement_mode = atc_stm::MOVEMENT_MODE::WAYPOINT;
+//	atc_stm::agv_state = atc_stm::AGV_STATE::PATROL;
+	// Reset the AprilTagLogic Variables
+	//stm_ptr->aprilTagLogic_ptr->reset();
 
 	Res.movement_mode = atc_stm::movement_mode;
 	Res.agv_state = atc_stm::agv_state;
@@ -254,12 +258,16 @@ bool dockToTag(atc_msgs::Dock_To_Tag::Request  &Req, atc_msgs::Dock_To_Tag::Resp
 	std::string movement_mode_string = atc_utils::getMovementModeString(atc_stm::movement_mode);
 	std::string agv_state_string = atc_utils::getAgvStateString(atc_stm::agv_state);
 
-	if(Res.agv_state == 4)
+	ROS_INFO("dockToTag() Current State:%s, enum:%i ", agv_state_string.c_str(), atc_stm::agv_state);
+
+//	if(Res.agv_state == 4)
+	if(Res.agv_state == 1)
 	{
 		sprintf(cbuffer, "DockToTag update ok:%s, %s", movement_mode_string.c_str(), agv_state_string.c_str());
 	}
 	else
 	{
+		ROS_INFO("dockToTag() Current State:%s (supposed to be Patrol!)", atc_utils::getAgvStateString(Res.agv_state));
 		sprintf(cbuffer, "DockToTag update NOT ok:%s, %s", movement_mode_string.c_str(), agv_state_string.c_str());
 	}
 

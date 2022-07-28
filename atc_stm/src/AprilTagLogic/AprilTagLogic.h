@@ -48,6 +48,7 @@ public:
 	void periodicSpin();
 
 	void reset();
+	void resetVariables();
 
 	int getClosestTrolleyID(){return closestTrolleyID;};
 

@@ -150,7 +150,7 @@ bool poseChangeDetected(const geometry_msgs::PoseStamped& pose1, const geometry_
 //	const bool isChanged = ((deltaX > 0.2f) || (deltaZ > 0.2f) || (yawQuatZ > 0.05f) || (yawQuatW > 0.05f));
 //	const bool isChanged = ((deltaX > 0.4f) || (deltaZ > 0.4f) || (yawQuatZ > 0.1f) || (yawQuatW > 0.1f));
 //	const bool isChanged = ((yawQuatZ > 0.1f) || (yawQuatW > 0.1f));
-	const bool isChanged = ((deltaX > 0.8f) || (deltaZ > 0.8f));
+	const bool isChanged = ((deltaX > 1.0f) || (deltaZ > 1.0f));
 
 //	const bool isChanged = isYawChanged;
 

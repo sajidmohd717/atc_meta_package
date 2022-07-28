@@ -68,17 +68,32 @@ AprilTagLogic::~AprilTagLogic() {
 //-----------------------------------------------------------------------------
 void AprilTagLogic::reset()
 {
-//#if DEBUG_APRILTAG_SERVO
+#if DEBUG_APRILTAG_SERVO
 //	  ROS_INFO("AprilTagLogic::reset() ");
-//#endif
+#endif
 
 	stagingGoalCalculated = false;
-
 	stagingGoalReached = false;
 	dockingGoalReached = false;
 	bDockToAprilTag = false;
 	//bFirstAprilTagLoop = true;
 
+	marker_pose_camera_avg.pose.position.x = 0.0;
+	marker_pose_camera_avg.pose.position.y = 0.0;
+	marker_pose_camera_avg.pose.orientation.x = 0.0;
+	marker_pose_camera_avg.pose.orientation.y = 0.0;
+	marker_pose_camera_avg.pose.orientation.z = 0.0;
+	marker_pose_camera_avg.pose.orientation.w = 0.0;
+
+	marker_pose_vec_.clear();
+}
+
+//-----------------------------------------------------------------------------
+void AprilTagLogic::resetVariables()
+{
+#if DEBUG_APRILTAG_SERVO
+	  ROS_INFO("AprilTagLogic::resetVariables() ");
+#endif
 	marker_pose_camera_avg.pose.position.x = 0.0;
 	marker_pose_camera_avg.pose.position.y = 0.0;
 	marker_pose_camera_avg.pose.orientation.x = 0.0;
@@ -362,7 +377,12 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 //	  ROS_INFO("AprilTagLogic::calcMotionGoal() tagArea:%.2f",tagArea);
 #endif
 
-//    const bool hasPoseChanged = atc_stm::poseChangeDetected(marker_pose_camera_avg, marker_pose_camera_);
+	  // Mod by Tim (28th July 2022):
+	  if((closestTrolleyID < 0) || (closestTrolleyID > 30))
+	  {
+		  ROS_WARN("AprilTagLogic::calcMotionGoal() - closestTrolleyID:%i failed! ", closestTrolleyID);
+		  return false;
+	  }
 
 
 #if 0
@@ -375,9 +395,11 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 
 		  // Mod by Tim:
 		  std::string tgtTagFrameTest = idToString(closestTrolleyID);
-		  while(!buffer_all_.canTransform("map", tgtTagFrameTest, ros::Time(0), ros::Duration(2.0)))
+//		  while(!buffer_all_.canTransform("map", tgtTagFrameTest, ros::Time(0), ros::Duration(6.0)))
+		  if(!buffer_all_.canTransform("map", tgtTagFrameTest, ros::Time(0), ros::Duration(6.0)))
 		  {
-			ROS_WARN("calcMotionGoal() canTransform() fail!");
+			ROS_WARN("AprilTagLogic::calcMotionGoal() - canTransform() false!, tgtTagFrame:%s", tgtTagFrameTest.c_str());
+			return false;
 		  }
 
 		  try
@@ -389,11 +411,11 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 			  ros::Time now = ros::Time::now();
 			  if(closestIsfromBackCamera)
 			  {
-				  //ROS_INFO("calcMotionGoal() closestIsfrom Back Camera...");
+//				  ROS_INFO("calcMotionGoal() closestIsfrom Back Camera...");
 			  }
 			  else
 			  {
-				  //ROS_INFO("calcMotionGoal() closestIsfrom Front Camera...");
+//				  ROS_INFO("calcMotionGoal() closestIsfrom Front Camera...");
 			  }
 				  buffer_all_.transform(marker_pose_camera_avg, marker_pose_avg_map_, "map", ros::Duration(6.0));
 				  std::string tgtTagFrame = idToString(closestTrolleyID);
@@ -463,6 +485,8 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 //--------------------------------------------------------------------------------
 bool AprilTagLogic::checkMotionGoalChanged()
 {
+//	ROS_INFO("AprilTagLogic::checkMotionGoalChanged() ");
+
 //	  if(goalChangeDetected(nav_goal_current, nav_goal_previous, tagArea) || bFirstAprilTagLoop)
 	  if(goalChangeDetected(marker_pose_camera_avg, marker_pose_camera_avg_previous, tagArea))
 	  {
@@ -486,8 +510,9 @@ void AprilTagLogic::sendMotionGoal()
 		marker_pose_camera_avg_previous = marker_pose_camera_avg;
 
 		marker_pose_vec_.clear();
-		//bFirstAprilTagLoop = false;
-               ROS_INFO("AprilTagLogic::sendMotionGoal(), reseting marker_pose_vec_.size():%i... ", marker_pose_vec_.size());
+//		resetVariables();
+
+        ROS_INFO("AprilTagLogic::sendMotionGoal(), reseting marker_pose_vec_.size():%i... ", marker_pose_vec_.size());
 }
 
 //--------------------------------------------------------------------------------
@@ -508,13 +533,13 @@ bool AprilTagLogic::calcDockingCmds(double& linearSpdCmd, double& linearYawRateC
 	if(stagingGoalReached && (!dockingGoalReached))
 	{
 #if DEBUG_APRILTAG_SERVO
-//		ROS_INFO("calcDockingCmds() - sending steeering cmds...");
+		//ROS_INFO("calcDockingCmds() - sending steeering cmds...");
 #endif
 
 //		  const double P_linear = 0.0009;
 		  const double& MAX_SPEED_METRE_SEC = 0.3;
 		  bool hasReached1 = false;
-		  const double tagAreaSetPoint = (bChargingDock) ? (180000):(60600);
+		  const double tagAreaSetPoint = (bChargingDock) ? (10000):(60600);
 		  const double P_linear = (bChargingDock) ? (0.0025):(0.0025);
 		  linearSpdCmd = calculateLinearSpeedCommand(P_linear, MAX_SPEED_METRE_SEC, tagAreaSetPoint, tagArea, hasReached1);
 
