@@ -462,8 +462,8 @@ bool AprilTagLogic::calcMotionGoal(geometry_msgs::PoseStamped& staging_goal_pose
 		  // Combine the nav_goal_pose with position from marker_pose_map_,
 		  // orientation from lookupTransform between map and Apriltag
 //		  geometry_msgs::PoseStamped nav_goal;
-//		  offset_x_ = (bIsTrolleyFront) ? (-2.0f) : (2.0f);
-		  offset_x_ = (bIsTrolleyFront) ? (-1.2f) : (1.2f);
+		  offset_x_ = (bIsTrolleyFront) ? (-2.0f) : (2.0f);
+//		  offset_x_ = (bIsTrolleyFront) ? (-1.2f) : (1.2f);
 		  nav_goal_current = marker_pose_avg_map_;
 		  nav_goal_current.header.frame_id = "map";
 		  nav_goal_current.header.stamp = ros::Time::now();
@@ -556,7 +556,8 @@ bool AprilTagLogic::calcDockingCmds(double& linearSpdCmd, double& linearYawRateC
 		  //const double MAX_YAW_RATE_RADSEC = 0.1;
 		  //const double P_yaw = 0.00625;
 		  //const double MAX_YAW_RATE_RADSEC = 0.25;
-		  const double P_yaw = 0.009;
+//		  const double P_yaw = 0.009;
+		  const double P_yaw = 0.012;
 		  const double MAX_YAW_RATE_RADSEC = 0.5;
 		  bool hasReached2 = false;
 		  linearYawRateCmd = calculateYawRateCommand(P_yaw, MAX_YAW_RATE_RADSEC, pixelPosRight, hasReached2);
