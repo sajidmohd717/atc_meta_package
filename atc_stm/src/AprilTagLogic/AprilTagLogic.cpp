@@ -89,10 +89,10 @@ void AprilTagLogic::reset()
 }
 
 //-----------------------------------------------------------------------------
-void AprilTagLogic::resetVariables()
+void AprilTagLogic::resetMarkerPose(const int index)
 {
 #if DEBUG_APRILTAG_SERVO
-	  ROS_INFO("AprilTagLogic::resetVariables() ");
+	  ROS_INFO("AprilTagLogic::resetMarkerPose(%i) ", index);
 #endif
 	marker_pose_camera_avg.pose.position.x = 0.0;
 	marker_pose_camera_avg.pose.position.y = 0.0;
@@ -225,7 +225,8 @@ void AprilTagLogic::periodicSpin()
 //		ROS_INFO("	periodicSpin() No tags detected! ");
     	notifyGroundStation(false, -1);
     	combined_tag_container.clear();
-    	marker_pose_vec_.clear();
+//    	marker_pose_vec_.clear();
+    	resetMarkerPose(1);
     	return;
     }
 
@@ -276,13 +277,15 @@ bool AprilTagLogic::identifyClosestTrolley(const std::map<int, TagData>& tags_co
 		if(!stagingGoalCalculated)
 		{
 			closestTrolleyID = currentClosestTrolleyID;
-			marker_pose_vec_.clear();
+//			marker_pose_vec_.clear();
+			resetMarkerPose(2);
 			ROS_INFO("	Change detected! closestTrolley ID:%i", closestTrolleyID);
 		}
 		else if (((closestTrolleyID+1) == currentClosestTrolleyID) && (stagingGoalCalculated))
 		{
 			ROS_INFO("	Trolley front tag:%i previously detected, changing to back tag...", closestTrolleyID);
-			marker_pose_vec_.clear();
+//			marker_pose_vec_.clear();
+			resetMarkerPose(3);
 			closestTrolleyID = currentClosestTrolleyID;
 		}
 		else
@@ -488,10 +491,13 @@ bool AprilTagLogic::checkMotionGoalChanged()
 //	ROS_INFO("AprilTagLogic::checkMotionGoalChanged() ");
 
 //	  if(goalChangeDetected(nav_goal_current, nav_goal_previous, tagArea) || bFirstAprilTagLoop)
-	  if(goalChangeDetected(marker_pose_camera_avg, marker_pose_camera_avg_previous, tagArea))
+
+	  bool bIsFirstLoop = ((marker_pose_camera_avg.pose.position.x == 0.0) && (marker_pose_camera_avg.pose.position.y = 0.0));
+
+	  if(goalChangeDetected(marker_pose_camera_avg, marker_pose_camera_avg_previous, tagArea) || bIsFirstLoop)
 	  {
 #if DEBUG_APRILTAG_SERVO
-		ROS_INFO("AprilTagLogic::checkMotionGoalChanged() goal has changed!");
+		ROS_INFO("AprilTagLogic::checkMotionGoalChanged() goal has changed! bIsFirstLoop:%i", bIsFirstLoop);
 #endif
 		return true;
 	  }
@@ -509,8 +515,8 @@ void AprilTagLogic::sendMotionGoal()
 		nav_goal_previous = nav_goal_current;
 		marker_pose_camera_avg_previous = marker_pose_camera_avg;
 
-		marker_pose_vec_.clear();
-//		resetVariables();
+//		marker_pose_vec_.clear();
+		resetMarkerPose(4);
 
         ROS_INFO("AprilTagLogic::sendMotionGoal(), reseting marker_pose_vec_.size():%i... ", marker_pose_vec_.size());
 }

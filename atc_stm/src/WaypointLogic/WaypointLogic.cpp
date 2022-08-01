@@ -32,7 +32,7 @@ namespace atc_stm {
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 //----------------------------------------------------------------------
-WaypointLogic::WaypointLogic(ros::NodeHandle* n_ptr, std::mutex* mtxPtr): nh_ptr(n_ptr), mtx_ptr(mtxPtr), isActive(false)
+WaypointLogic::WaypointLogic(ros::NodeHandle* n_ptr, std::mutex* mtxPtr): nh_ptr(n_ptr), mtx_ptr(mtxPtr), isActive(false), doResetAprilTag(false)
 {
     ROS_INFO("WaypointLogic() Constructor");
 
@@ -579,6 +579,8 @@ void WaypointLogic::CallbackRunSpecificWp(atc_msgs::RunSpecificWp wp_name_msg)
 		pub_debug.publish(msg_debug);
 		return;
 	}
+
+	doResetAprilTag = true;
 
     std::vector<std::string> wp_list = {};
 

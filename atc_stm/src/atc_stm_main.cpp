@@ -148,6 +148,17 @@ int main(int argc, char **argv)
 	{
 		stm.waypointLogic_ptr->isActive = true;
 
+		if(stm.waypointLogic_ptr->doResetAprilTag == true)
+		{
+			ROS_WARN("STM_MAIN: doResetAprilTag true, aprilTagLogic_ptr->reset()...");
+
+			stm.aprilTagLogic_ptr->reset();
+			atc_stm::movement_mode = atc_stm::WAYPOINT;
+			atc_stm::agv_state = atc_stm::PATROL;
+
+			stm.waypointLogic_ptr->doResetAprilTag = false;
+		}
+
 #if DEBUG_ATC_STM_WAYPOINTMODES
 //		ROS_INFO("WAYPOINT");
 #endif

@@ -44,6 +44,7 @@ public:
 //	bool RunSpecificWp(atc_msgs::Run_Specific_Wp::Request &req, atc_msgs::Run_Specific_Wp::Response &res);
 
     bool isActive;
+    bool doResetAprilTag;
 
 private:
 	bool SaveWp(atc_msgs::Save_Wp::Request &req, atc_msgs::Save_Wp::Response &res);

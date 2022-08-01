@@ -248,7 +248,11 @@ bool dockToTag(atc_msgs::Dock_To_Tag::Request  &Req, atc_msgs::Dock_To_Tag::Resp
 //	atc_stm::movement_mode = atc_stm::MOVEMENT_MODE::WAYPOINT;
 //	atc_stm::agv_state = atc_stm::AGV_STATE::PATROL;
 	// Reset the AprilTagLogic Variables
-	//stm_ptr->aprilTagLogic_ptr->reset();
+	stm_ptr->aprilTagLogic_ptr->resetMarkerPose(0);
+
+	// Set a dummy value, to trigger the "goalChangeDetected()" function
+	stm_ptr->aprilTagLogic_ptr->marker_pose_camera_avg.pose.position.x = 5.0;
+	stm_ptr->aprilTagLogic_ptr->marker_pose_camera_avg.pose.position.y = 5.0;
 
 	Res.movement_mode = atc_stm::movement_mode;
 	Res.agv_state = atc_stm::agv_state;
@@ -258,7 +262,16 @@ bool dockToTag(atc_msgs::Dock_To_Tag::Request  &Req, atc_msgs::Dock_To_Tag::Resp
 	std::string movement_mode_string = atc_utils::getMovementModeString(atc_stm::movement_mode);
 	std::string agv_state_string = atc_utils::getAgvStateString(atc_stm::agv_state);
 
-	ROS_INFO("dockToTag() Current State:%s, enum:%i ", agv_state_string.c_str(), atc_stm::agv_state);
+	ROS_INFO("dockToTag() Curr State:%s, enum:%i, stagingGoalCalc:%i, stagingGoalRea:%i, dockingGoalRea:%i",
+			agv_state_string.c_str(), atc_stm::agv_state,
+			stm_ptr->aprilTagLogic_ptr->stagingGoalCalculated,
+			stm_ptr->aprilTagLogic_ptr->stagingGoalReached,
+			stm_ptr->aprilTagLogic_ptr->dockingGoalReached);
+	ROS_INFO("	MarkPose_X:%0.2f, Y:%0.2f,   MarkPosePrev_X:%0.2f, Y:%0.2f,",
+			stm_ptr->aprilTagLogic_ptr->marker_pose_camera_avg.pose.position.x,
+			stm_ptr->aprilTagLogic_ptr->marker_pose_camera_avg.pose.position.y,
+			stm_ptr->aprilTagLogic_ptr->marker_pose_camera_avg_previous.pose.position.x,
+			stm_ptr->aprilTagLogic_ptr->marker_pose_camera_avg_previous.pose.position.y);
 
 //	if(Res.agv_state == 4)
 	if(Res.agv_state == 1)
@@ -348,6 +361,9 @@ bool stopGoals()
 bool sendGoal(const geometry_msgs::PoseStamped& nav_goal_pose, bool& goalReached)
 {
     ROS_INFO("sendGoal()");
+
+//    ROS_INFO("	Clearing AprilTag Instance");
+//	stm_ptr->aprilTagLogic_ptr->reset();
 
     move_base_msgs::MoveBaseGoal goal;
 	goal.target_pose.header.frame_id = nav_goal_pose.header.frame_id;
