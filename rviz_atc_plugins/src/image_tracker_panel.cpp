@@ -1079,6 +1079,7 @@ void ImageTrackerPanel::create_status_group_box()
  {
 	std_srvs::SetBool latMsg;
 	std::string laserLimitsMinMsg, laserLimitsMaxMsg;
+	std::string amr_footprint;
 
 	if(latch)
 	{
@@ -1094,6 +1095,7 @@ void ImageTrackerPanel::create_status_group_box()
 
 	    laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -1.571";
 	    laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 1.571";
+	    amr_footprint = "rosrun dynamic_reconfigure dynparam set [[-1.3,-0.4],[-1.3,0.4],[0.355228,0.4],[0.355228,-0.4]]";
 
 	 	QString message("AGV Latch2 down");
 	 	latch_pushButton->setText(message);
@@ -1112,6 +1114,7 @@ void ImageTrackerPanel::create_status_group_box()
 
 	    laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -3.142";
 	    laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 3.142";
+	    amr_footprint = "rosrun dynamic_reconfigure dynparam set [[-0.166772,-0.27],[-0.166772,0.27],[0.355228,0.27],[0.355228,-0.27]]";
 
 	 	QString message("AGV Latch2 Up");
 	 	latch_pushButton->setText(message);
@@ -1119,6 +1122,7 @@ void ImageTrackerPanel::create_status_group_box()
 
 	system(laserLimitsMinMsg.c_str());
 	system(laserLimitsMaxMsg.c_str());
+	system(amr_footprint.c_str());
 
  }
 
