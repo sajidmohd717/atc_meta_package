@@ -546,8 +546,8 @@ bool AprilTagLogic::calcDockingCmds(double& linearSpdCmd, double& linearYawRateC
 //		  const double P_linear = 0.0009;
 		  const double& MAX_SPEED_METRE_SEC = 0.3;
 		  bool hasReached1 = false;
-		  const double tagAreaSetPoint = (bChargingDock) ? (10000):(60600);
-		  const double P_linear = (bChargingDock) ? (0.0025):(0.0025);
+		  const double tagAreaSetPoint = (bChargingDock) ? (10000):(120000);
+		  const double P_linear = (bChargingDock) ? (0.0020):(0.0020);
 		  linearSpdCmd = calculateLinearSpeedCommand(P_linear, MAX_SPEED_METRE_SEC, tagAreaSetPoint, tagArea, hasReached1);
 
 			// Is charging dock..? Move forward in that case...
