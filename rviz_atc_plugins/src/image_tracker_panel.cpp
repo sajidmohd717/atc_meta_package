@@ -213,6 +213,22 @@ void ImageTrackerPanel::xnergyCallback(const plc_modbus_node::xnergy_sensors::Co
     _debug_voltage_label->setText(debug_text);
 }
 
+//--------------------------------------------------------------------------------------------
+void ImageTrackerPanel::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel_msg)
+{
+	char debug_cmd_heading[50];
+	char debug_cmd_linear_spd[50];
+	sprintf (debug_cmd_heading, "CmdHeadingSec:%.2f rad/s",
+			cmd_vel_msg->angular.z);
+
+	sprintf (debug_cmd_linear_spd, "CmdSpd:%.2f m/s",
+			cmd_vel_msg->linear.x);
+
+	_debug_cmd_turnrate_label->setText(debug_cmd_heading);
+	_debug_cmd_linear_spd_label->setText(debug_cmd_linear_spd);
+
+}
+
 
 // ----------------------------------------------------------------------
 ImageTrackerPanel::ImageTrackerPanel( QWidget* parent )
@@ -245,6 +261,8 @@ fleet_name_(""), agv_number_("0"), movement_mode(1)
   agv_docking_pb_subscriber = nh_.subscribe("atc_stm/AprilTag_Has_Solution", 2, &ImageTrackerPanel::dockingPBCallback, this);
   // subscribe to xnergy sensors
   xnergy_subscriber = nh_.subscribe("/modbus/xnergy_sensors", 2, &ImageTrackerPanel::xnergyCallback, this);
+  // cmd_vel
+  cmd_vel_subscriber = nh_.subscribe("/cmd_vel", 2, &ImageTrackerPanel::cmdVelCallback, this);
 
   // Messages out
   stop_to_stm_publisher_ = nh_.advertise<atc_msgs::Stop_To_STM>("Stop_To_STM", 1 );
@@ -431,7 +449,7 @@ void ImageTrackerPanel::sendDriveWidgetCmd()
     velocity_publisher_.publish( msg );
 
     char debug_text[150];
-    sprintf (debug_text, "CmdHeading:%.2f Deg", rviz::ImageTrackerDisplay::imgTrkInfo.commandedHeadingDegrees);
+    sprintf (debug_text, "CmdHeading:%.2f deg", rviz::ImageTrackerDisplay::imgTrkInfo.commandedHeadingDegrees);
     _debug_cmd_heading_label->setText(debug_text);
 
     if(rviz::ImageTrackerDisplay::imgTrkInfo.hasChanged)
@@ -547,7 +565,7 @@ void ImageTrackerPanel::subscribeAgvTopics(void)
 	  amclPoseIn_topic_ = getAmclPoseInTopicString(fleet_name_, agv_number_);
 
 #if DEBUG_IMG_TRK_PANEL
-	ROS_INFO("	(%s : %s)", cmdVelOut_topic_.toStdString().c_str(), imuIn_topic_.toStdString().c_str());
+	ROS_INFO("ImageTrackerPanel::subscribeAgvTopics()	(%s : %s)", cmdVelOut_topic_.toStdString().c_str(), imuIn_topic_.toStdString().c_str());
 #endif
 
 	  setCmdVelOutTopic(cmdVelOut_topic_);
@@ -742,8 +760,11 @@ void ImageTrackerPanel::create_status_group_box()
   _debug_cmd_heading_label = new QLabel("CmdHeading:---");
   debug_telemetry_layout->addWidget(_debug_cmd_heading_label, 2, 0);
 
+  _debug_cmd_turnrate_label = new QLabel("CmdHeadingSec:---");
+  debug_telemetry_layout->addWidget(_debug_cmd_turnrate_label, 2, 1);
+
   _debug_cmd_linear_spd_label = new QLabel("CmdSpeed:---");
-  debug_telemetry_layout->addWidget(_debug_cmd_linear_spd_label, 2, 1);
+  debug_telemetry_layout->addWidget(_debug_cmd_linear_spd_label, 2, 2);
 
   _debug_telemetry_group_box->setLayout(debug_telemetry_layout);
 }
@@ -1057,8 +1078,8 @@ void ImageTrackerPanel::create_status_group_box()
  	    {
  	    	msg.latch = false;
  	    	msg.command_string = "Down.";
- 	    	laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -3.142";
- 	    	laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 3.142";
+ 	    	laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -2.1";
+ 	    	laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 2.1";
 
  	    	std_srvs::SetBool latMsg;
  	    	latMsg.request.data = false;
@@ -1079,7 +1100,13 @@ void ImageTrackerPanel::create_status_group_box()
  {
 	std_srvs::SetBool latMsg;
 	std::string laserLimitsMinMsg, laserLimitsMaxMsg;
-	std::string amr_footprint;
+//	std::string amr_footprint;
+
+//	  max_vel_lin: 0.9
+//	  min_vel_lin: 0.6
+//	  max_vel_th: 1.0
+	std::string eband_max_vel_lin, eband_min_vel_lin, eband_max_vel_th;
+	char debug_txt[200];
 
 	if(latch)
 	{
@@ -1087,18 +1114,25 @@ void ImageTrackerPanel::create_status_group_box()
 		if(latch_client.call(latMsg))
 		{
 			ROS_INFO("sendLatchCommand2(latch true) - %s", latMsg.response.message.c_str());
+
+			sprintf(debug_txt,"%s",latMsg.response.message.c_str());
 		}
 		else
 		{
 			ROS_WARN("	NOK(latch true) - Failed to call Service [/trolley_lifting_arm_srv]");
+			sprintf(debug_txt,"Failed to call Service");
 		}
 
 	    laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -1.571";
 	    laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 1.571";
-	    amr_footprint = "rosrun dynamic_reconfigure dynparam set [[-1.3,-0.4],[-1.3,0.4],[0.355228,0.4],[0.355228,-0.4]]";
+//	    amr_footprint = "rosrun dynamic_reconfigure dynparam set [[-1.3,-0.4],[-1.3,0.4],[0.355228,0.4],[0.355228,-0.4]]";
+	    eband_max_vel_lin = "rosrun dynamic_reconfigure dynparam set /move_base/EBandPlannerROS  max_vel_lin 0.7";
+	    eband_min_vel_lin = "rosrun dynamic_reconfigure dynparam set /move_base/EBandPlannerROS  min_vel_lin 0.4";
+	    eband_max_vel_th = "rosrun dynamic_reconfigure dynparam set /move_base/EBandPlannerROS  max_vel_th 0.3";
 
 	 	QString message("AGV Latch2 down");
 	 	latch_pushButton->setText(message);
+	 	_debug_latch_label->setText(debug_txt);
 	}
 	else
 	{
@@ -1112,17 +1146,24 @@ void ImageTrackerPanel::create_status_group_box()
 			ROS_WARN("	NOK(latch false) - Failed to call Service [/trolley_lifting_arm_srv]");
 		}
 
-	    laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -3.142";
-	    laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 3.142";
-	    amr_footprint = "rosrun dynamic_reconfigure dynparam set [[-0.166772,-0.27],[-0.166772,0.27],[0.355228,0.27],[0.355228,-0.27]]";
+	    laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -2.1";
+	    laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 2.1";
+//	    amr_footprint = "rosrun dynamic_reconfigure dynparam set [[-0.166772,-0.27],[-0.166772,0.27],[0.355228,0.27],[0.355228,-0.27]]";
+	    eband_max_vel_lin = "rosrun dynamic_reconfigure dynparam set /move_base/EBandPlannerROS  max_vel_lin 0.9";
+	    eband_min_vel_lin = "rosrun dynamic_reconfigure dynparam set /move_base/EBandPlannerROS  min_vel_lin 0.6";
+	    eband_max_vel_th = "rosrun dynamic_reconfigure dynparam set /move_base/EBandPlannerROS  max_vel_th 1.0";
 
 	 	QString message("AGV Latch2 Up");
 	 	latch_pushButton->setText(message);
+	 	_debug_latch_label->setText(debug_txt);
 	}
 
 	system(laserLimitsMinMsg.c_str());
 	system(laserLimitsMaxMsg.c_str());
-	system(amr_footprint.c_str());
+//	system(amr_footprint.c_str());
+	system(eband_max_vel_lin.c_str());
+	system(eband_min_vel_lin.c_str());
+	system(eband_max_vel_th.c_str());
 
  }
 

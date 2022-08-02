@@ -133,6 +133,7 @@ protected:
   ros::Subscriber agv_detector_pb_subscriber;	// msg to enable pushbutton
   ros::Subscriber agv_docking_pb_subscriber;	// msg to enable pushbutton
   ros::Subscriber xnergy_subscriber;
+  ros::Subscriber cmd_vel_subscriber;
   void agvStatusCallback(const atc_msgs::AGVStatus::ConstPtr& agv_status_msg);
 
   // Services
@@ -167,6 +168,7 @@ protected:
   void detectorPBCallback(const atc_msgs::Detector_Has_Solution::ConstPtr& detect_pb_msg);
   void dockingPBCallback(const atc_msgs::AprilTag_Has_Solution::ConstPtr& docking_pb_msg);
   void xnergyCallback(const plc_modbus_node::xnergy_sensors::ConstPtr& xnergy_msg);
+  void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel_msg);
 
   // ----------- Topic labels -----------
   QGroupBox* _debug_topic_group_box;
@@ -201,6 +203,7 @@ protected:
   QGridLayout* debug_telemetry_layout;
   QLabel* _debug_current_heading_label;
   QLabel* _debug_cmd_heading_label;
+  QLabel* _debug_cmd_turnrate_label;
   QLabel* _debug_current_linear_spd_label;
   QLabel* _debug_cmd_linear_spd_label;
   double east_meters;

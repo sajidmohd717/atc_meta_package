@@ -92,7 +92,10 @@ void AprilTagLogic::reset()
 void AprilTagLogic::resetMarkerPose(const int index)
 {
 #if DEBUG_APRILTAG_SERVO
+	if(index != 1)
+	{
 	  ROS_INFO("AprilTagLogic::resetMarkerPose(%i) ", index);
+	}
 #endif
 	marker_pose_camera_avg.pose.position.x = 0.0;
 	marker_pose_camera_avg.pose.position.y = 0.0;
