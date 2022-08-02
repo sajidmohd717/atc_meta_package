@@ -72,6 +72,7 @@
 // For Xnergy charging and status msgs
 #include <plc_modbus_node/xnergy_sensors.h>
 #include <std_srvs/Empty.h>
+#include <std_srvs/SetBool.h>
 
 class QLineEdit;
 
@@ -110,6 +111,7 @@ protected Q_SLOTS:
   void sendDockingToTag(bool proceed);
   void sendStopToSTM(bool stop);
   void sendLatchCommand(bool latch);
+  void sendLatchCommand2(bool latch);
 
   // *New additions (28th July 2021)
   void sendResetClearCostMap(bool bReset);
@@ -152,6 +154,7 @@ protected:
 //  atc_msgs::Goto_Trolley_DropOff goto_trolley_dropoff_srv;
   ros::ServiceClient charge_agv_client;
   ros::ServiceClient stop_charge_agv_client;
+  ros::ServiceClient latch_client;
 
   float angular_velocity_radsec;
   float cmd_odom_heading_deg_;
