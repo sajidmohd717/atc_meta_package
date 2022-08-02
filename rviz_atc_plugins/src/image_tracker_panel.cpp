@@ -236,6 +236,7 @@ fleet_name_(""), agv_number_("0"), movement_mode(1)
 //  goto_trolley_dropoff_client = nh_.serviceClient<atc_msgs::Goto_Trolley_DropOff>("waypoint_server/Goto_Trolley_DropOff");
   charge_agv_client = nh_.serviceClient<std_srvs::Empty>("xnergy_node/start_charging");
   stop_charge_agv_client = nh_.serviceClient<std_srvs::Empty>("xnergy_node/stop_charging");
+  latch_client = nh_.serviceClient<std_srvs::SetBool>("trolley_lifting_arm_srv");
 
 
   // Messages in
@@ -295,7 +296,7 @@ fleet_name_(""), agv_number_("0"), movement_mode(1)
   connect( auto_docking_pushButton, SIGNAL( clicked(bool) ), this, SLOT( sendDockingToTag(bool) ));
 
   // Service for latching
-  connect( latch_pushButton, SIGNAL( clicked(bool) ), this, SLOT( sendLatchCommand(bool) ));
+  connect( latch_pushButton, SIGNAL( clicked(bool) ), this, SLOT( sendLatchCommand2(bool) ));
 
   // *New additions (28th July 2021)
   // Service for reset & clear cost map
@@ -1041,6 +1042,7 @@ void ImageTrackerPanel::create_status_group_box()
  		// Going to set Red
  	    atc_msgs::Latch msg;
  	    std::string laserLimitsMinMsg, laserLimitsMaxMsg;
+
  	    if(latch)
  	    {
  	    	msg.latch = true;
@@ -1048,8 +1050,8 @@ void ImageTrackerPanel::create_status_group_box()
  	    	laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -1.571";
  	    	laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 1.571";
 
- 	 	   QString message("AGV Latch down");
- 	 	   latch_pushButton->setText(message);
+ 	 	    QString message("AGV Latch down");
+ 	 	    latch_pushButton->setText(message);
  	    }
  	    else
  	    {
@@ -1058,16 +1060,71 @@ void ImageTrackerPanel::create_status_group_box()
  	    	laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -3.142";
  	    	laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 3.142";
 
+ 	    	std_srvs::SetBool latMsg;
+ 	    	latMsg.request.data = false;
+ 	    	latch_client.call(latMsg);
+
   	 	   QString message("AGV Latch Up");
   	 	   latch_pushButton->setText(message);
  	    }
  	   system(laserLimitsMinMsg.c_str());
  	   system(laserLimitsMaxMsg.c_str());
+// 	   system(latchStr.c_str());
  	   latch_And_changeLaserLimit_publisher_.publish( msg );
 
  }
 
+ //----------------------------------------------------------------------------------------
+ void ImageTrackerPanel::sendLatchCommand2(bool latch)
+ {
+	std_srvs::SetBool latMsg;
+	std::string laserLimitsMinMsg, laserLimitsMaxMsg;
+	std::string amr_footprint;
 
+	if(latch)
+	{
+		latMsg.request.data = true;
+		if(latch_client.call(latMsg))
+		{
+			ROS_INFO("sendLatchCommand2(latch true) - %s", latMsg.response.message.c_str());
+		}
+		else
+		{
+			ROS_WARN("	NOK(latch true) - Failed to call Service [/trolley_lifting_arm_srv]");
+		}
+
+	    laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -1.571";
+	    laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 1.571";
+	    amr_footprint = "rosrun dynamic_reconfigure dynparam set [[-1.3,-0.4],[-1.3,0.4],[0.355228,0.4],[0.355228,-0.4]]";
+
+	 	QString message("AGV Latch2 down");
+	 	latch_pushButton->setText(message);
+	}
+	else
+	{
+		latMsg.request.data = false;
+		if(latch_client.call(latMsg))
+		{
+			ROS_INFO("sendLatchCommand2(latch false) - %s", latMsg.response.message.c_str());
+		}
+		else
+		{
+			ROS_WARN("	NOK(latch false) - Failed to call Service [/trolley_lifting_arm_srv]");
+		}
+
+	    laserLimitsMinMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_min -3.142";
+	    laserLimitsMaxMsg = "rosrun dynamic_reconfigure dynparam set /laserscan_multi_merger  angle_max 3.142";
+	    amr_footprint = "rosrun dynamic_reconfigure dynparam set [[-0.166772,-0.27],[-0.166772,0.27],[0.355228,0.27],[0.355228,-0.27]]";
+
+	 	QString message("AGV Latch2 Up");
+	 	latch_pushButton->setText(message);
+	}
+
+	system(laserLimitsMinMsg.c_str());
+	system(laserLimitsMaxMsg.c_str());
+	system(amr_footprint.c_str());
+
+ }
 
 //--------------------------------------------------------------------------------------------
 void ImageTrackerPanel::sendNavigateToTrolley(bool proceed)
