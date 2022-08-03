@@ -192,24 +192,49 @@ void ImageTrackerPanel::agvStatusCallback(const atc_msgs::AGVStatus::ConstPtr& a
 }
 
 //--------------------------------------------------------------------------------------------
-void ImageTrackerPanel::xnergyCallback(const plc_modbus_node::xnergy_sensors::ConstPtr& xnergy_msg)
+//void ImageTrackerPanel::xnergyCallback(const plc_modbus_node::xnergy_sensors::ConstPtr& xnergy_msg)
+//{
+//	plc_modbus_node::xnergy_sensors xn_sensors = *xnergy_msg;
+//
+//    char debug_text[200];
+////  xn_sensors.xnergy_runtime_voltage;
+////	xn_sensors.xnergy_runtime_current;
+////	xn_sensors.rcu_temp;
+////	xn_sensors.batt_output_current;
+////	xn_sensors.battery_volt;
+////	xn_sensors.error_code;
+//	sprintf (debug_text, "RT_v:%.2f,c:%.2f,t:%i deg, Batt_v:%.2f,c:%.2f, Err_code:%i",
+//			xn_sensors.xnergy_runtime_voltage,
+//			xn_sensors.xnergy_runtime_current,
+//			xn_sensors.rcu_temp,
+//			xn_sensors.battery_volt,
+//			xn_sensors.batt_output_current,
+//			xn_sensors.error_code);
+//    _debug_voltage_label->setText(debug_text);
+//}
+
+//--------------------------------------------------------------------------------------------
+//float32 voltage          # Voltage in Volts (Mandatory)
+//float32 current          # Negative when discharging (A)  (If unmeasured NaN)
+//float32 charge           # Current charge in Ah  (If unmeasured NaN)
+//float32 capacity         # Capacity in Ah (last full capacity)  (If unmeasured NaN)
+//float32 design_capacity  # Capacity in Ah (design capacity)  (If unmeasured NaN)
+//float32 percentage       # Charge percentage on 0 to 1 range  (If unmeasured NaN)
+//uint8   power_supply_status     # The charging status as reported. Values defined above
+//uint8   power_supply_health     # The battery health metric. Values defined above
+//uint8   power_supply_technology # The battery chemistry. Values defined above
+//bool    present          # True if the battery is present
+void ImageTrackerPanel::xnergyCallback2(const sensor_msgs::BatteryState::ConstPtr& xnergy_msg)
 {
-	plc_modbus_node::xnergy_sensors xn_sensors = *xnergy_msg;
+	sensor_msgs::BatteryState battState = *xnergy_msg;
 
     char debug_text[200];
-//  xn_sensors.xnergy_runtime_voltage;
-//	xn_sensors.xnergy_runtime_current;
-//	xn_sensors.rcu_temp;
-//	xn_sensors.batt_output_current;
-//	xn_sensors.battery_volt;
-//	xn_sensors.error_code;
-	sprintf (debug_text, "RT_v:%.2f,c:%.2f,t:%i deg, Batt_v:%.2f,c:%.2f, Err_code:%i",
-			xn_sensors.xnergy_runtime_voltage,
-			xn_sensors.xnergy_runtime_current,
-			xn_sensors.rcu_temp,
-			xn_sensors.battery_volt,
-			xn_sensors.batt_output_current,
-			xn_sensors.error_code);
+	sprintf (debug_text, "Pct:%.2f, V:%.2f, C:%.2f, Cap:%.2f, S/N:%s",
+			battState.percentage,
+			battState.voltage,
+			battState.current,
+			battState.capacity,
+			battState.serial_number.c_str());
     _debug_voltage_label->setText(debug_text);
 }
 
@@ -259,8 +284,11 @@ fleet_name_(""), agv_number_("0"), movement_mode(1)
   agv_state_subscriber = nh_.subscribe("atc_stm/AGVStatus", 2, &ImageTrackerPanel::agvStatusCallback, this);
   agv_detector_pb_subscriber = nh_.subscribe("atc_stm/Detector_Has_Solution", 2, &ImageTrackerPanel::detectorPBCallback, this);
   agv_docking_pb_subscriber = nh_.subscribe("atc_stm/AprilTag_Has_Solution", 2, &ImageTrackerPanel::dockingPBCallback, this);
+
   // subscribe to xnergy sensors
-  xnergy_subscriber = nh_.subscribe("/modbus/xnergy_sensors", 2, &ImageTrackerPanel::xnergyCallback, this);
+//  xnergy_subscriber = nh_.subscribe("/modbus/xnergy_sensors", 2, &ImageTrackerPanel::xnergyCallback, this);
+  xnergy_subscriber = nh_.subscribe("/xnergy_charger_rcu/battery_state", 2, &ImageTrackerPanel::xnergyCallback2, this);
+
   // cmd_vel
   cmd_vel_subscriber = nh_.subscribe("/cmd_vel", 2, &ImageTrackerPanel::cmdVelCallback, this);
 

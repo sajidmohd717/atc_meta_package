@@ -49,6 +49,7 @@
 #include <sensor_msgs/Imu.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <sensor_msgs/BatteryState.h>
 
 #include "ImageTrackerInfo.h"
 
@@ -167,7 +168,8 @@ protected:
   void amclPoseCallback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& amcl_pose_msg);
   void detectorPBCallback(const atc_msgs::Detector_Has_Solution::ConstPtr& detect_pb_msg);
   void dockingPBCallback(const atc_msgs::AprilTag_Has_Solution::ConstPtr& docking_pb_msg);
-  void xnergyCallback(const plc_modbus_node::xnergy_sensors::ConstPtr& xnergy_msg);
+//  void xnergyCallback(const plc_modbus_node::xnergy_sensors::ConstPtr& xnergy_msg);
+  void xnergyCallback2(const sensor_msgs::BatteryState::ConstPtr& xnergy_msg);
   void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel_msg);
 
   // ----------- Topic labels -----------
